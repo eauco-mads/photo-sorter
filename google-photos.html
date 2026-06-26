@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Photos Sorter</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808; --dark: #111; --card: #161616;
+    --border: #242424; --text: #f0f0f0; --muted: #888; --gold: #c9a84c;
+  }
+
+  body {
+    background: var(--black); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* ── SETUP SCREEN ── */
+  #setup-screen {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; height: 100vh; gap: 0; padding: 40px 24px;
+    text-align: center; overflow-y: auto;
+  }
+
+  #setup-screen h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 300;
+    color: #fff; margin-bottom: 12px; margin-top: 24px;
+  }
+
+  #setup-screen .sub { color: var(--muted); max-width: 480px; margin-bottom: 32px; line-height: 1.7; }
+
+  .setup-box {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px; max-width: 520px; width: 100%;
+    text-align: left; margin-bottom: 20px;
+  }
+
+  .setup-box h3 { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+
+  .setup-steps { display: flex; flex-direction: column; gap: 14px; }
+  .setup-step { display: flex; gap: 12px; font-size: 0.88rem; color: #bbb; line-height: 1.5; }
+  .setup-step b { color: #fff; }
+  .step-n { color: var(--gold); font-weight: 700; flex-shrink: 0; min-width: 18px; }
+
+  .input-row { margin-top: 20px; display: flex; gap: 10px; }
+  #client-id-input {
+    flex: 1; background: #0f0f0f; border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 16px; color: #fff; font-size: 0.88rem;
+    outline: none; font-family: monospace;
+  }
+  #client-id-input:focus { border-color: #555; }
+  #client-id-input::placeholder { color: #444; }
+
+  .btn-primary {
+    background: #fff; color: #000; font-weight: 700; font-size: 0.9rem;
+    padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer;
+    white-space: nowrap; transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .kbd-grid {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 8px 16px; max-width: 520px; width: 100%;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 24px;
+  }
+  .kbd-grid .key {
+    background: #222; border: 1px solid #333; border-radius: 5px;
+    padding: 3px 10px; font-family: monospace; font-size: 0.85rem;
+    color: #fff; text-align: center; align-self: center;
+  }
+  .kbd-grid .lbl { font-size: 0.85rem; color: #aaa; align-self: center; }
+
+  #sign-in-btn {
+    display: none; margin-top: 8px;
+  }
+
+  .google-note {
+    font-size: 0.78rem; color: var(--muted); max-width: 420px;
+    line-height: 1.6; margin-top: 8px;
+  }
+
+  /* ── LOADING ── */
+  #loading-screen {
+    display: none; flex-direction: column; align-items: center;
+    justify-content: center; height: 100vh; gap: 16px; text-align: center; padding: 24px;
+  }
+
+  .spinner {
+    width: 36px; height: 36px; border: 2px solid var(--border);
+    border-top-color: #fff; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #loading-text { color: var(--muted); font-size: 0.9rem; }
+  #loading-count { color: #fff; font-size: 1.1rem; font-weight: 300; }
+
+  /* ── APP ── */
+  #app { display: none; flex-direction: column; height: 100vh; }
+
+  #top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; background: #111; border-bottom: 1px solid var(--border);
+    flex-shrink: 0; gap: 16px;
+  }
+
+  #progress-text { font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
+  #media-name { font-size: 0.82rem; color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; text-align: center; }
+
+  #key-hints { display: flex; gap: 14px; font-size: 0.75rem; color: #666; flex-shrink: 0; }
+  #key-hints b { color: #fff; background: #222; border-radius: 4px; padding: 2px 7px; font-family: monospace; margin-right: 2px; }
+
+  #viewer {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; background: var(--black);
+  }
+
+  #viewer img, #viewer video {
+    max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px;
+  }
+
+  .media-type-badge {
+    position: absolute; top: 16px; left: 16px;
+    background: rgba(0,0,0,0.6); color: #aaa;
+    font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px; backdrop-filter: blur(8px);
+  }
+
+  /* ── DONE ── */
+  #done-screen {
+    display: none; flex-direction: column; align-items: center;
+    justify-content: center; height: 100vh; gap: 20px; text-align: center; padding: 40px;
+  }
+  #done-screen h2 { font-size: 1.8rem; font-weight: 300; }
+  #done-screen p { color: var(--muted); }
+
+  #stats {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 32px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px; text-align: left;
+  }
+  #stats .sl { color: var(--muted); font-size: 0.82rem; }
+  #stats .sv { color: #fff; font-weight: 600; }
+
+  /* ── TOAST / UNDO ── */
+  #toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);
+    color: #fff; padding: 10px 22px; border-radius: 999px;
+    font-size: 0.88rem; pointer-events: none; opacity: 0;
+    transition: opacity 0.2s, transform 0.2s; white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  #album-flash {
+    position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 10px; pointer-events: none;
+  }
+  .album-pill {
+    background: rgba(201,168,76,0.2); border: 1px solid var(--gold);
+    color: var(--gold); padding: 6px 16px; border-radius: 999px;
+    font-size: 0.82rem; letter-spacing: 0.5px;
+    animation: popIn 0.25s ease;
+  }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+  #error-bar {
+    display: none; background: #2a0f0f; color: #f88;
+    padding: 10px 20px; text-align: center; font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setup-screen">
+  <div style="font-size:2rem;">📸</div>
+  <h1>Google Photos Sorter</h1>
+  <p class="sub">Sort your Google Photos into albums — one at a time, one keypress each. Works on any device, any browser.</p>
+
+  <div class="setup-box">
+    <h3>One-time setup (5 min)</h3>
+    <div class="setup-steps">
+      <div class="setup-step"><span class="step-n">1</span><span>Go to <b>console.cloud.google.com</b> → Create a new project (name it anything)</span></div>
+      <div class="setup-step"><span class="step-n">2</span><span>Search for <b>"Photos Library API"</b> → Enable it</span></div>
+      <div class="setup-step"><span class="step-n">3</span><span>Go to <b>APIs & Services → Credentials → Create Credentials → OAuth Client ID</b></span></div>
+      <div class="setup-step"><span class="step-n">4</span><span>Application type: <b>Web application</b>. Under "Authorized JavaScript origins" add: <b>https://eauco-mads.github.io</b></span></div>
+      <div class="setup-step"><span class="step-n">5</span><span>Copy your <b>Client ID</b> and paste it below</span></div>
+    </div>
+    <div class="input-row">
+      <input id="client-id-input" type="text" placeholder="Paste your Google Client ID here (ends in .apps.googleusercontent.com)" />
+      <button class="btn-primary" id="save-client-id-btn" onclick="saveClientId()">Save</button>
+    </div>
+  </div>
+
+  <button class="btn-primary" id="sign-in-btn" onclick="signIn()">Sign in with Google →</button>
+  <p class="google-note">Your photos never leave your browser or Google's servers. This tool only adds photos to albums — it never deletes, moves, or modifies anything.</p>
+
+  <div style="height:24px"></div>
+
+  <div class="kbd-grid">
+    <div class="key">T</div><div class="lbl">Add to Travel album</div>
+    <div class="key">P</div><div class="lbl">Add to Personal album</div>
+    <div class="key">S</div><div class="lbl">Add to Stock / Print album</div>
+    <div class="key">A</div><div class="lbl">Add to Archive album</div>
+    <div class="key">D</div><div class="lbl">Add to multiple albums (then press category keys)</div>
+    <div class="key">→</div><div class="lbl">Skip — don't add to any album</div>
+    <div class="key">U</div><div class="lbl">Undo last album assignment</div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <div id="loading-count">Loading your photos...</div>
+  <div id="loading-text">This may take a moment for large libraries</div>
+</div>
+
+<div id="error-bar"></div>
+
+<!-- APP -->
+<div id="app">
+  <div id="top-bar">
+    <div id="progress-text">—</div>
+    <div id="media-name">—</div>
+    <div id="key-hints">
+      <div><b>T</b>Travel</div>
+      <div><b>P</b>Personal</div>
+      <div><b>S</b>Stock</div>
+      <div><b>A</b>Archive</div>
+      <div><b>D</b>Multi</div>
+      <div><b>→</b>Skip</div>
+      <div><b>U</b>Undo</div>
+    </div>
+  </div>
+  <div id="viewer"></div>
+</div>
+
+<!-- DONE -->
+<div id="done-screen">
+  <h2>All sorted!</h2>
+  <p>Your albums are ready in Google Photos.</p>
+  <div id="stats"></div>
+  <button class="btn-primary" onclick="restart()">Start Over</button>
+</div>
+
+<div id="toast"></div>
+<div id="album-flash"></div>
+
+<script src="https://accounts.google.com/gsi/client" async></script>
+<script>
+const SCOPES = 'https://www.googleapis.com/auth/photoslibrary';
+const FOLDER_NAMES = { t: 'Travel', p: 'Personal', s: 'Stock', a: 'Archive' };
+const PAGE_SIZE = 50;
+
+let clientId = localStorage.getItem('gps_client_id') || '';
+let accessToken = null;
+let tokenClient = null;
+let mediaItems = [];
+let index = 0;
+let albumCache = {};   // name → id
+let undoStack = [];    // { albumId, mediaItemId, albumName, mediaName }
+let stats = { Travel: 0, Personal: 0, Stock: 0, Archive: 0, Skipped: 0 };
+let multiMode = false; // D key toggles multi-album mode
+let multiAlbums = [];  // albums assigned in current multi-mode session
+let toastTimer = null;
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  const input = document.getElementById('client-id-input');
+  if (clientId) {
+    input.value = clientId;
+    showSignInBtn();
+    initGIS();
+  }
+});
+
+function saveClientId() {
+  const val = document.getElementById('client-id-input').value.trim();
+  if (!val || !val.includes('.apps.googleusercontent.com')) {
+    showToast('Paste a valid Google Client ID first', true);
+    return;
+  }
+  clientId = val;
+  localStorage.setItem('gps_client_id', clientId);
+  showSignInBtn();
+  initGIS();
+  showToast('Client ID saved!');
+}
+
+function showSignInBtn() {
+  document.getElementById('sign-in-btn').style.display = 'inline-block';
+}
+
+function initGIS() {
+  if (!clientId || !window.google) {
+    setTimeout(initGIS, 500);
+    return;
+  }
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: clientId,
+    scope: SCOPES,
+    callback: onToken,
+  });
+}
+
+function signIn() {
+  if (!clientId) { showToast('Save your Client ID first', true); return; }
+  if (!tokenClient) { initGIS(); setTimeout(signIn, 600); return; }
+  tokenClient.requestAccessToken({ prompt: 'consent' });
+}
+
+function onToken(resp) {
+  if (resp.error) { showError('Sign-in failed: ' + resp.error); return; }
+  accessToken = resp.access_token;
+  loadAllPhotos();
+}
+
+// ── LOAD PHOTOS ──
+async function loadAllPhotos() {
+  show('loading-screen');
+  mediaItems = [];
+  let pageToken = null;
+  let page = 0;
+
+  try {
+    do {
+      page++;
+      document.getElementById('loading-count').textContent =
+        `Loading... ${mediaItems.length} photos so far`;
+
+      const url = new URL('https://photoslibrary.googleapis.com/v1/mediaItems');
+      url.searchParams.set('pageSize', PAGE_SIZE);
+      if (pageToken) url.searchParams.set('pageToken', pageToken);
+
+      const res = await apiFetch(url.toString());
+      if (!res.ok) throw new Error('API error ' + res.status);
+      const data = await res.json();
+
+      if (data.mediaItems) mediaItems.push(...data.mediaItems);
+      pageToken = data.nextPageToken || null;
+
+      // Stop after 20 pages (1000 photos) to keep it manageable
+      if (page >= 20) break;
+    } while (pageToken);
+
+    if (mediaItems.length === 0) {
+      showError('No photos found in your Google Photos library.');
+      return;
+    }
+
+    document.getElementById('loading-count').textContent =
+      `${mediaItems.length} photos loaded!`;
+
+    index = 0;
+    stats = { Travel: 0, Personal: 0, Stock: 0, Archive: 0, Skipped: 0 };
+    undoStack = [];
+    albumCache = {};
+
+    show('app');
+    await showCurrent();
+
+  } catch(e) {
+    showError('Failed to load photos: ' + e.message);
+  }
+}
+
+// ── DISPLAY ──
+async function showCurrent() {
+  if (index >= mediaItems.length) { finish(); return; }
+
+  const item = mediaItems[index];
+  const viewer = document.getElementById('viewer');
+  viewer.innerHTML = '';
+
+  document.getElementById('progress-text').textContent =
+    `${index + 1} / ${mediaItems.length}`;
+  document.getElementById('media-name').textContent =
+    item.filename || item.id;
+
+  const isVideo = item.mimeType?.startsWith('video/');
+  const url = item.baseUrl + (isVideo ? '=dv' : '=w2048-h2048');
+
+  if (isVideo) {
+    const vid = document.createElement('video');
+    vid.src = url;
+    vid.controls = true; vid.autoplay = true; vid.loop = true; vid.muted = true;
+    viewer.appendChild(vid);
+    const badge = document.createElement('div');
+    badge.className = 'media-type-badge';
+    badge.textContent = 'Video';
+    viewer.appendChild(badge);
+  } else {
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = item.filename || '';
+    viewer.appendChild(img);
+  }
+
+  multiMode = false;
+  multiAlbums = [];
+  document.getElementById('album-flash').innerHTML = '';
+}
+
+// ── ACTIONS ──
+async function assignAlbum(key) {
+  const albumName = FOLDER_NAMES[key];
+  const item = mediaItems[index];
+
+  try {
+    const albumId = await getOrCreateAlbum(albumName);
+    await addToAlbum(albumId, item.id);
+
+    if (multiMode) {
+      multiAlbums.push(albumName);
+      flashAlbum(albumName);
+      undoStack.push({ albumId, mediaItemId: item.id, albumName, mediaName: item.filename });
+      return; // stay on same photo in multi mode
+    }
+
+    undoStack.push({ albumId, mediaItemId: item.id, albumName, mediaName: item.filename });
+    stats[albumName]++;
+    index++;
+    flashAlbum(albumName);
+    await showCurrent();
+
+  } catch(e) {
+    showToast('Error: ' + e.message, true);
+  }
+}
+
+async function skip() {
+  stats.Skipped++;
+  multiMode = false;
+  index++;
+  showToast('Skipped');
+  await showCurrent();
+}
+
+function toggleMultiMode() {
+  if (!multiMode) {
+    multiMode = true;
+    multiAlbums = [];
+    showToast('Multi-album mode — press category keys, then → to advance');
+  } else {
+    // Confirm and advance
+    multiMode = false;
+    for (const n of multiAlbums) stats[n] = (stats[n] || 0) + 1;
+    multiAlbums = [];
+    index++;
+    document.getElementById('album-flash').innerHTML = '';
+    showCurrent();
+  }
+}
+
+async function undoLast() {
+  if (undoStack.length === 0) { showToast('Nothing to undo'); return; }
+  const { albumId, mediaItemId, albumName, mediaName } = undoStack.pop();
+  try {
+    await removeFromAlbum(albumId, mediaItemId);
+    if (stats[albumName] > 0) stats[albumName]--;
+    index = Math.max(0, index - 1);
+    showToast(`Removed from ${albumName}`);
+    await showCurrent();
+  } catch(e) {
+    showToast('Undo failed: ' + e.message, true);
+  }
+}
+
+// ── ALBUM API ──
+async function getOrCreateAlbum(name) {
+  if (albumCache[name]) return albumCache[name];
+
+  // list existing albums
+  let pageToken = null;
+  do {
+    const url = new URL('https://photoslibrary.googleapis.com/v1/albums');
+    url.searchParams.set('pageSize', '50');
+    if (pageToken) url.searchParams.set('pageToken', pageToken);
+    const res = await apiFetch(url.toString());
+    const data = await res.json();
+    for (const album of data.albums || []) {
+      if (album.title === name) {
+        albumCache[name] = album.id;
+        return album.id;
+      }
+    }
+    pageToken = data.nextPageToken || null;
+  } while (pageToken);
+
+  // create it
+  const res = await apiFetch('https://photoslibrary.googleapis.com/v1/albums', {
+    method: 'POST',
+    body: JSON.stringify({ album: { title: name } }),
+  });
+  const album = await res.json();
+  albumCache[name] = album.id;
+  return album.id;
+}
+
+async function addToAlbum(albumId, mediaItemId) {
+  await apiFetch(
+    `https://photoslibrary.googleapis.com/v1/albums/${albumId}:batchAddMediaItems`,
+    { method: 'POST', body: JSON.stringify({ mediaItemIds: [mediaItemId] }) }
+  );
+}
+
+async function removeFromAlbum(albumId, mediaItemId) {
+  await apiFetch(
+    `https://photoslibrary.googleapis.com/v1/albums/${albumId}:batchRemoveMediaItems`,
+    { method: 'POST', body: JSON.stringify({ mediaItemIds: [mediaItemId] }) }
+  );
+}
+
+function apiFetch(url, opts = {}) {
+  return fetch(url, {
+    ...opts,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+      ...(opts.headers || {}),
+    },
+  });
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', async (e) => {
+  if (document.getElementById('app').style.display === 'none') return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+  const k = e.key.toLowerCase();
+  if (['t','p','s','a'].includes(k)) { e.preventDefault(); await assignAlbum(k); }
+  else if (k === 'd') { e.preventDefault(); toggleMultiMode(); }
+  else if (k === 'arrowright') {
+    e.preventDefault();
+    if (multiMode) { toggleMultiMode(); } // confirm multi and advance
+    else { await skip(); }
+  }
+  else if (k === 'u') { e.preventDefault(); await undoLast(); }
+});
+
+// ── FINISH ──
+function finish() {
+  show('done-screen');
+  const rows = Object.entries(stats)
+    .filter(([,v]) => v > 0)
+    .map(([k,v]) => `<div class="sl">${k}</div><div class="sv">${v} photo${v !== 1 ? 's' : ''}</div>`)
+    .join('');
+  document.getElementById('stats').innerHTML =
+    rows || '<div class="sl" style="grid-column:span 2">Nothing sorted yet.</div>';
+}
+
+function restart() {
+  show('loading-screen');
+  loadAllPhotos();
+}
+
+// ── UI HELPERS ──
+function show(id) {
+  ['setup-screen','loading-screen','app','done-screen'].forEach(s => {
+    const el = document.getElementById(s);
+    el.style.display = s === id ? (s === 'app' ? 'flex' : 'flex') : 'none';
+  });
+}
+
+function flashAlbum(name) {
+  const flash = document.getElementById('album-flash');
+  const pill = document.createElement('div');
+  pill.className = 'album-pill';
+  pill.textContent = '→ ' + name;
+  flash.appendChild(pill);
+  if (!multiMode) setTimeout(() => flash.innerHTML = '', 800);
+}
+
+let toastTmr = null;
+function showToast(msg, isErr = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = isErr ? 'rgba(200,50,50,0.85)' : 'rgba(255,255,255,0.1)';
+  el.classList.add('show');
+  clearTimeout(toastTmr);
+  toastTmr = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function showError(msg) {
+  const bar = document.getElementById('error-bar');
+  bar.textContent = msg;
+  bar.style.display = 'block';
+  show('setup-screen');
+}
+</script>
+</body>
+</html>
