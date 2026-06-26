@@ -240,21 +240,9 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-// ── EmailJS config ──
-// 1. Sign up free at emailjs.com
-// 2. Add a Gmail (or any) email service → copy Service ID
-// 3. Create an email template → copy Template ID
-//    Template variables to use: {{to_email}}, {{reply_to}}
-//    Template body should include the two links below
-// 4. Go to Account → copy your Public Key
-// Then replace the three placeholders below:
-const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-
-emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+// Paste your Google Apps Script Web App URL here once deployed
+const SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
 async function submitEmail() {
   const email = document.getElementById('email-field').value.trim();
@@ -268,16 +256,12 @@ async function submitEmail() {
   btn.textContent = 'Sending...';
 
   try {
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      to_email: email,
-      reply_to: email,
-      desktop_link: 'https://eauco-mads.github.io/photo-sorter/',
-      google_link:  'https://eauco-mads.github.io/photo-sorter/google-photos.html',
-      pdf_link:     'YOUR_PDF_LINK_HERE',
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ email }),
     });
   } catch(e) {
-    // Show success anyway — don't punish buyer for a config gap
-    console.error('EmailJS error:', e);
+    console.error('Send error:', e);
   }
 
   document.getElementById('email-form').style.display = 'none';
