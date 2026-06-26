@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort Your Photos in 20 Minutes — Photo Organization System</title>
+<meta name="description" content="Stop losing your best shots in a camera roll you'll never scroll through. Sort everything in 20 minutes with a tool built for photographers.">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --dark: #111;
+    --card: #161616;
+    --border: #242424;
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #fff;
+    --gold: #c9a84c;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 20px 24px 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 80px 24px 60px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+  }
+
+  .price-badge {
+    display: inline-block;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+
+  .price-badge strong { color: #fff; font-size: 1rem; }
+
+  .cta-btn {
+    display: inline-block;
+    background: #fff;
+    color: #000;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 18px 44px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: opacity 0.15s, transform 0.15s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .cta-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 1px;
+    height: 60px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  /* ── PAIN ── */
+  .pain {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 60px 24px;
+    text-align: center;
+  }
+
+  .pain h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 300;
+    line-height: 1.4;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  .pain p {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .pain-list {
+    list-style: none;
+    margin: 32px auto 0;
+    max-width: 420px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .pain-list li {
+    display: flex;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: #bbb;
+  }
+
+  .pain-list li::before {
+    content: '—';
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  /* ── WHAT YOU GET ── */
+  .what {
+    padding: 80px 24px;
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .what-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 48px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 28px;
+  }
+
+  .card-num {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .card h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .card .tag {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+
+  .how h2 {
+    text-align: center;
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-weight: 300;
+    color: #fff;
+    margin-bottom: 48px;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .step h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .step p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── KEYS ── */
+  .keys-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .key {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #ddd;
+  }
+
+  /* ── FOR WHO ── */
+  .forwho {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 24px;
+  }
+
+  .forwho-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .forwho h2 {
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-weight: 300;
+    color: #fff;
+    margin-bottom: 32px;
+  }
+
+  .who-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .who-list li {
+    display: flex;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: #ccc;
+  }
+
+  .who-list li::before {
+    content: '✓';
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* ── BOTTOM CTA ── */
+  .bottom-cta {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 100px 24px;
+    text-align: center;
+  }
+
+  .bottom-cta h2 {
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-weight: 300;
+    color: #fff;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .bottom-cta p {
+    color: var(--muted);
+    margin-bottom: 40px;
+    font-size: 1rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>Photo Organization System</header>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="eyebrow">Digital Download · Instant Access</p>
+  <h1>Stop losing your best shots<br>in a camera roll you'll<br><em>never scroll through again.</em></h1>
+  <p class="hero-sub">A simple tool + system that lets you sort through hundreds of photos in 20 minutes — one by one, keyboard shortcuts, files move instantly. No subscriptions. No apps. Just done.</p>
+
+  <div class="price-badge">Everything included &nbsp;·&nbsp; <strong>$11</strong></div><br>
+
+  <a href="#buy" class="cta-btn">Get Instant Access →</a>
+  <p class="cta-note">Instant download · Works on Mac &amp; PC · Open in Chrome, sort in minutes</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- PAIN -->
+<section class="pain">
+  <h2>You have thousands of photos.<br>You can't find any of them.</h2>
+  <p>The camera roll never stops growing. Snapchat dumps. iPhone screenshots. That one perfect shot from six months ago you'll never find again.</p>
+  <ul class="pain-list">
+    <li>You've been meaning to organize them for months</li>
+    <li>You scroll forever looking for one specific photo</li>
+    <li>Your best content is buried under 4,000 random shots</li>
+    <li>You keep downloading apps that don't actually help</li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHAT YOU GET -->
+<section class="what">
+  <div class="what-inner">
+    <p class="section-label">What's included</p>
+    <div class="cards">
+
+      <div class="card">
+        <p class="card-num">01</p>
+        <h3>The Photo Sorter Tool</h3>
+        <p>A browser-based tool that shows your photos one at a time. One keypress moves each file into the right folder — instantly, on your own computer. No upload. No cloud. No waiting.</p>
+        <span class="tag">Mac &amp; PC · Chrome/Edge</span>
+      </div>
+
+      <div class="card">
+        <p class="card-num">02</p>
+        <h3>The 20-Minute Sort Guide</h3>
+        <p>Step-by-step: how to export from Snapchat, pull photos off your iPhone, set up your folders, and sort everything in one focused session. Print it, follow it, done.</p>
+        <span class="tag">PDF · 1 page</span>
+      </div>
+
+      <div class="card">
+        <p class="card-num">03</p>
+        <h3>The Folder System</h3>
+        <p>Four folders. That's the whole system. Travel, Personal, Stock/Print, Archive. Simple enough that you'll actually maintain it. Explained so you know exactly what goes where.</p>
+        <span class="tag">Included in guide</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <h2>How it works</h2>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>Export your photos to one folder</h4>
+        <p>Pull everything from Snapchat, your iPhone camera roll, or wherever they live. Dump it all in one folder called Unsorted. The guide walks you through exactly how.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>Open the sorter in Chrome</h4>
+        <p>Open the tool, click Choose Folder, pick your Unsorted folder. Your first photo appears immediately.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>One keypress per photo</h4>
+        <p>No dragging. No clicking through menus. Just look at the photo and press a key.</p>
+        <div class="keys-row">
+          <span class="key">T</span>
+          <span class="key">P</span>
+          <span class="key">S</span>
+          <span class="key">A</span>
+          <span class="key">D</span>
+          <span class="key">→ skip</span>
+          <span class="key">U undo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>Files move in real time</h4>
+        <p>Every keypress instantly moves the file into the right folder on your computer. When you finish the queue — you're done. No extra step. No export. Just sorted.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOR WHO -->
+<section class="forwho">
+  <div class="forwho-inner">
+    <h2>This is for you if —</h2>
+    <ul class="who-list">
+      <li>You're a photographer drowning in unorganized shoots</li>
+      <li>You use Snapchat and your memories are a mess</li>
+      <li>You're a content creator who can never find the right shot</li>
+      <li>You've tried folder systems before but they didn't stick</li>
+      <li>You want something that actually takes 20 minutes, not 20 hours</li>
+      <li>You want your photos to work for you, not stress you out</li>
+    </ul>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta" id="buy">
+  <h2>Your photos deserve<br>to be found.</h2>
+  <p>$11. Instant download. Sort your first folder tonight.</p>
+  <!-- Replace href with your GHL or Gumroad checkout link -->
+  <a href="YOUR_CHECKOUT_LINK_HERE" class="cta-btn">Get the Photo Organization System →</a>
+  <p class="cta-note" style="margin-top:14px;">Includes the Sorter Tool · 20-Minute Guide · Folder System</p>
+</section>
+
+<footer>
+  © 2026 · Photo Organization System · Questions? <a href="mailto:maddie@elevatealign.com" style="color:inherit">maddie@elevatealign.com</a>
+</footer>
+
+</body>
+</html>
