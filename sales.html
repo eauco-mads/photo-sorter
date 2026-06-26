@@ -372,6 +372,54 @@
     font-size: 1rem;
   }
 
+  /* ── FAQ ── */
+  .faq {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+
+  .faq h2 {
+    text-align: center;
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-weight: 300;
+    color: #fff;
+    margin-bottom: 40px;
+  }
+
+  .faq-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .faq-q {
+    width: 100%; background: var(--card); border: none; cursor: pointer;
+    padding: 18px 22px; display: flex; justify-content: space-between;
+    align-items: center; gap: 16px; text-align: left;
+    font-size: 0.92rem; font-weight: 500; color: #fff;
+    font-family: inherit; transition: background 0.15s;
+  }
+  .faq-q:hover { background: #1c1c1c; }
+  .faq-icon { color: var(--muted); font-size: 1.2rem; flex-shrink: 0; transition: transform 0.2s; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.2s ease;
+    background: var(--card); border-top: 0 solid var(--border);
+  }
+  .faq-item.open .faq-a {
+    max-height: 300px;
+    border-top-width: 1px;
+    padding: 18px 22px;
+  }
+  .faq-a p { font-size: 0.88rem; color: var(--muted); line-height: 1.75; }
+  .faq-a strong { color: #ccc; }
+
   /* ── FOOTER ── */
   footer {
     border-top: 1px solid var(--border);
@@ -509,17 +557,98 @@
   </div>
 </section>
 
+<!-- FAQ -->
+<section class="faq">
+  <h2>Questions people ask</h2>
+  <div class="faq-list">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Does it work with an external hard drive?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>Yes — any drive that shows up on your Mac or PC works.</strong> When you click "Choose Folder" it opens your full file picker. Navigate to your external hard drive, SD card, or USB stick and pick any folder on it. Files move directly on that drive — nothing gets copied to your computer first.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Does it work with videos too?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>Yes.</strong> MP4, MOV, AVI, MKV, M4V — all supported. Videos auto-play muted so you can preview them while you sort. Same keyboard shortcuts, same workflow.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Do my photos get uploaded anywhere?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>Never.</strong> Everything happens entirely on your own computer. The tool runs in your browser but it only talks to your local files — nothing is sent to a server, stored in a cloud, or seen by anyone else. 100% private.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        I'm on my phone — does it work?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p>The desktop sorter requires Chrome or Edge on a Mac or PC. But the bundle includes the <strong>Google Photos Sorter</strong> — same experience, works on any device and any browser including iPhone and Android. It sorts your photos directly into albums in your Google Photos library.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Does it work on Windows?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>Yes.</strong> Open the tool in Chrome or Edge on any Windows PC and it works exactly the same way. The folder picker, the keyboard shortcuts, the instant file moves — all of it.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What image formats are supported?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p>JPG, PNG, HEIC, HEIF, WEBP, GIF, TIFF, AVIF, BMP for photos. MP4, MOV, AVI, MKV, WEBM, M4V, 3GP for videos. Basically everything your iPhone, Android, or camera produces.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Is this a subscription?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>One-time purchase, yours forever.</strong> No monthly fees. No account to create. You get the tool, the guide, and the Google Photos version — all in one payment. The links never expire.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What if I lose the page?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p>Stripe sends you a receipt email with your order details. On the download page there's an option to email yourself all the links so you always have them in your inbox. And you can always reach out at maddie@elevatealign.com — I'll resend everything.</p></div>
+    </div>
+
+  </div>
+</section>
+
 <!-- BOTTOM CTA -->
 <section class="bottom-cta" id="buy">
   <h2>Your photos deserve<br>to be found.</h2>
-  <p>$11. Instant download. Sort your first folder tonight.</p>
+  <p>$27 · One-time · Instant access to everything</p>
   <a href="https://buy.stripe.com/9B6eVe9WW3ak9kIfx64ow03" class="cta-btn">Get the Photo Organization System →</a>
-  <p class="cta-note" style="margin-top:14px;">Includes the Sorter Tool · 20-Minute Guide · Folder System</p>
+  <p class="cta-note" style="margin-top:14px;">Desktop Sorter · Google Photos Sorter · 20-Minute Guide · Folder System</p>
 </section>
 
 <footer>
   © 2026 · Photo Organization System · Questions? <a href="mailto:maddie@elevatealign.com" style="color:inherit">maddie@elevatealign.com</a>
 </footer>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
 
 </body>
 </html>
