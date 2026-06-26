@@ -420,6 +420,41 @@
   .faq-a p { font-size: 0.88rem; color: var(--muted); line-height: 1.75; }
   .faq-a strong { color: #ccc; }
 
+  /* ── WAITLIST ── */
+  .waitlist {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 24px;
+  }
+  .waitlist-inner { max-width: 560px; margin: 0 auto; text-align: center; }
+  .waitlist-tag {
+    font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .waitlist .waitlist-inner h2 {
+    font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 300; color: #fff; margin-bottom: 14px;
+  }
+  .waitlist-sub { font-size: 0.95rem; color: var(--muted); margin-bottom: 32px; line-height: 1.7; }
+  .waitlist-row { display: flex; gap: 10px; margin-bottom: 12px; }
+  .waitlist-input {
+    flex: 1; background: #0f0f0f; border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px; color: #fff; font-size: 0.9rem;
+    outline: none; font-family: inherit;
+  }
+  .waitlist-input:focus { border-color: #555; }
+  .waitlist-input::placeholder { color: #444; }
+  .waitlist-btn {
+    background: var(--gold); color: #000; font-weight: 700; font-size: 0.88rem;
+    padding: 14px 24px; border-radius: 8px; border: none; cursor: pointer;
+    white-space: nowrap; transition: opacity 0.15s;
+  }
+  .waitlist-btn:hover { opacity: 0.85; }
+  .waitlist-note { font-size: 0.78rem; color: #555; }
+  .waitlist-confirmed { color: var(--gold); font-size: 0.95rem; padding: 16px 0; }
+
+  @media (max-width: 480px) { .waitlist-row { flex-direction: column; } }
+
   /* ── FOOTER ── */
   footer {
     border-top: 1px solid var(--border);
@@ -557,6 +592,25 @@
   </div>
 </section>
 
+<!-- WAITLIST -->
+<section class="waitlist">
+  <div class="waitlist-inner">
+    <p class="waitlist-tag">Coming soon</p>
+    <h2>Google Photos Sorter — Mobile Version</h2>
+    <p class="waitlist-sub">Same experience, no computer needed. Sort directly from your phone — iPhone, Android, anywhere. Works right inside your Google Photos library.</p>
+    <div id="waitlist-form">
+      <div class="waitlist-row">
+        <input type="email" id="waitlist-email" class="waitlist-input" placeholder="your@email.com" />
+        <button class="waitlist-btn" onclick="joinWaitlist()">Get first access →</button>
+      </div>
+      <p class="waitlist-note">As an existing customer you'll get it free when it drops. Everyone else pays more.</p>
+    </div>
+    <div id="waitlist-success" style="display:none;">
+      <p class="waitlist-confirmed">✓ You're on the list! We'll email you the second it drops.</p>
+    </div>
+  </div>
+</section>
+
 <!-- FAQ -->
 <section class="faq">
   <h2>Questions people ask</h2>
@@ -639,9 +693,39 @@
 
 <footer>
   © 2026 · Photo Organization System · Questions? <a href="mailto:maddie@elevatealign.com" style="color:inherit">maddie@elevatealign.com</a>
+  &nbsp;·&nbsp; <a href="privacy-policy.html" style="color:inherit">Privacy Policy</a>
 </footer>
 
 <script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlpD8puQg7H-LR3Y6JQtqgDsQu5g1xmBQ7DLoA0KD5GEKUE56g3Cs87LRX-JZkfcDGaQ/exec';
+
+// Autofill + waitlist state on load
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('ps_email');
+  if (saved) {
+    const el = document.getElementById('waitlist-email');
+    if (el) el.value = saved;
+  }
+  if (localStorage.getItem('ps_waitlist')) {
+    document.getElementById('waitlist-form').style.display = 'none';
+    document.getElementById('waitlist-success').style.display = 'block';
+  }
+});
+
+async function joinWaitlist() {
+  const email = document.getElementById('waitlist-email').value.trim();
+  if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
+  const btn = document.querySelector('.waitlist-btn');
+  btn.disabled = true; btn.textContent = 'Joining...';
+  localStorage.setItem('ps_email', email);
+  localStorage.setItem('ps_waitlist', 'true');
+  try {
+    await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ email, action: 'waitlist' }) });
+  } catch(e) {}
+  document.getElementById('waitlist-form').style.display = 'none';
+  document.getElementById('waitlist-success').style.display = 'block';
+}
+
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
   const isOpen = item.classList.contains('open');
