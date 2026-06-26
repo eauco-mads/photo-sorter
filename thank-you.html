@@ -8,69 +8,123 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --black: #080808; --dark: #111; --card: #161616;
-    --border: #242424; --text: #f0f0f0; --muted: #888;
-    --gold: #c9a84c;
+    --border: #242424; --text: #f0f0f0; --muted: #888; --gold: #c9a84c;
   }
   body {
     background: var(--black); color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     min-height: 100vh; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 40px 24px; line-height: 1.6;
+    align-items: center; padding: 60px 24px; line-height: 1.6;
   }
-  .wrap { max-width: 600px; width: 100%; text-align: center; }
+  .wrap { max-width: 620px; width: 100%; text-align: center; }
 
   .check {
     width: 64px; height: 64px; border-radius: 50%;
     border: 2px solid var(--gold);
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 32px; font-size: 1.6rem;
+    margin: 0 auto 28px; font-size: 1.6rem;
   }
-  .eyebrow {
-    font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 16px;
-  }
-  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 300; color: #fff; margin-bottom: 16px; }
-  .sub { color: var(--muted); font-size: 1rem; margin-bottom: 48px; max-width: 440px; margin-left: auto; margin-right: auto; }
+  .eyebrow { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 300; color: #fff; margin-bottom: 12px; }
+  .sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 40px; max-width: 440px; margin-left: auto; margin-right: auto; }
 
-  .downloads { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
+  /* ── DOWNLOAD CARDS ── */
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px; text-align: left;
+  }
+
+  .downloads { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
 
   .dl-card {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 24px 28px;
+    border-radius: 12px; padding: 20px 24px;
     display: flex; align-items: center; justify-content: space-between;
-    gap: 20px; text-align: left;
+    gap: 16px; text-align: left;
   }
-  .dl-info h3 { font-size: 1rem; font-weight: 500; color: #fff; margin-bottom: 4px; }
-  .dl-info p { font-size: 0.82rem; color: var(--muted); }
+  .dl-tag {
+    font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 4px;
+  }
+  .dl-info h3 { font-size: 0.95rem; font-weight: 500; color: #fff; margin-bottom: 3px; }
+  .dl-info p { font-size: 0.8rem; color: var(--muted); }
 
   .dl-btn {
     display: inline-flex; align-items: center; gap: 8px;
-    background: #fff; color: #000; font-size: 0.85rem; font-weight: 700;
-    padding: 12px 22px; border-radius: 8px; text-decoration: none;
+    background: #fff; color: #000; font-size: 0.82rem; font-weight: 700;
+    padding: 10px 20px; border-radius: 8px; text-decoration: none;
     white-space: nowrap; transition: opacity 0.15s; flex-shrink: 0;
   }
   .dl-btn:hover { opacity: 0.85; }
-  .dl-btn.outline {
-    background: transparent; color: #fff;
-    border: 1px solid var(--border);
+  .dl-btn.ghost {
+    background: transparent; color: #fff; border: 1px solid var(--border);
   }
-  .dl-btn.outline:hover { border-color: #666; }
+  .dl-btn.ghost:hover { border-color: #555; }
 
-  .divider { width: 1px; height: 40px; background: var(--border); margin: 0 auto 40px; }
+  /* ── DIVIDER ── */
+  .or-divider {
+    display: flex; align-items: center; gap: 16px;
+    margin: 32px 0; color: var(--muted); font-size: 0.8rem;
+  }
+  .or-divider::before, .or-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
 
-  .steps { text-align: left; background: var(--dark); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 40px; }
-  .steps h2 { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
-  .step { display: flex; gap: 16px; margin-bottom: 20px; }
+  /* ── EMAIL FORM ── */
+  .email-box {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px; margin-bottom: 40px; text-align: left;
+  }
+  .email-box h2 { font-size: 1rem; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .email-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+
+  .form-row { display: flex; gap: 10px; }
+  .email-input {
+    flex: 1; background: #0f0f0f; border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 16px; color: #fff; font-size: 0.88rem;
+    outline: none;
+  }
+  .email-input:focus { border-color: #555; }
+  .email-input::placeholder { color: #444; }
+
+  .send-btn {
+    background: var(--gold); color: #000; font-weight: 700; font-size: 0.85rem;
+    padding: 12px 22px; border-radius: 8px; border: none; cursor: pointer;
+    white-space: nowrap; transition: opacity 0.15s;
+  }
+  .send-btn:hover { opacity: 0.85; }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .form-success {
+    display: none; text-align: center; padding: 16px;
+    color: var(--gold); font-size: 0.9rem;
+  }
+
+  /* ── QUICK START ── */
+  .steps {
+    text-align: left; background: var(--dark); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px; margin-bottom: 40px;
+  }
+  .steps-label { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+  .step { display: flex; gap: 14px; margin-bottom: 18px; }
   .step:last-child { margin-bottom: 0; }
-  .step-num { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--muted); flex-shrink: 0; margin-top: 2px; }
-  .step h4 { font-size: 0.9rem; color: #fff; margin-bottom: 3px; font-weight: 500; }
-  .step p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .step-num {
+    width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; color: var(--muted); flex-shrink: 0; margin-top: 2px;
+  }
+  .step h4 { font-size: 0.88rem; color: #fff; margin-bottom: 3px; font-weight: 500; }
+  .step p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
   .keys { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .key { background: #1e1e1e; border: 1px solid #333; border-radius: 5px; padding: 3px 10px; font-family: monospace; font-size: 0.8rem; color: #ddd; }
+  .key { background: #1e1e1e; border: 1px solid #333; border-radius: 5px; padding: 3px 10px; font-family: monospace; font-size: 0.78rem; color: #ddd; }
 
-  footer { margin-top: 48px; font-size: 0.78rem; color: var(--muted); }
+  footer { font-size: 0.75rem; color: var(--muted); margin-top: 16px; }
   footer a { color: inherit; }
+
+  @media (max-width: 480px) {
+    .dl-card { flex-direction: column; align-items: flex-start; }
+    .form-row { flex-direction: column; }
+  }
 </style>
 </head>
 <body>
@@ -79,52 +133,84 @@
   <div class="check">✓</div>
   <p class="eyebrow">Order confirmed</p>
   <h1>You're all set.</h1>
-  <p class="sub">Everything is below. Bookmark this page — your downloads live here. A receipt was also sent to your email.</p>
+  <p class="sub">Everything is below — click to open or download right now. Bookmark this page so you always have it.</p>
 
+  <!-- DOWNLOADS -->
+  <p class="section-label">Your downloads</p>
   <div class="downloads">
 
     <div class="dl-card">
       <div class="dl-info">
+        <div class="dl-tag">Desktop · Mac &amp; PC</div>
         <h3>Photo Sorter Tool</h3>
-        <p>Open in Chrome · Works on Mac &amp; PC</p>
+        <p>Open in Chrome or Edge · sorts files directly on your computer</p>
       </div>
-      <a href="https://eauco-mads.github.io/photo-sorter/" class="dl-btn" target="_blank">Open Tool →</a>
+      <a href="https://eauco-mads.github.io/photo-sorter/" class="dl-btn" target="_blank">Open Now →</a>
     </div>
 
     <div class="dl-card">
       <div class="dl-info">
-        <h3>20-Minute Sort Guide</h3>
-        <p>PDF · Export from Snapchat &amp; iPhone + folder system</p>
+        <div class="dl-tag">Any device · Any browser</div>
+        <h3>Google Photos Sorter</h3>
+        <p>Sorts into albums in your Google Photos — works on iPhone, Android, anywhere</p>
       </div>
-      <!-- Replace with your actual PDF link once uploaded -->
-      <a href="YOUR_PDF_LINK_HERE" class="dl-btn" download>Download PDF</a>
+      <a href="https://eauco-mads.github.io/photo-sorter/google-photos.html" class="dl-btn" target="_blank">Open Now →</a>
+    </div>
+
+    <div class="dl-card">
+      <div class="dl-info">
+        <div class="dl-tag">PDF Guide</div>
+        <h3>20-Minute Sort Guide</h3>
+        <p>Export from Snapchat &amp; iPhone + the folder system explained</p>
+      </div>
+      <!-- Swap YOUR_PDF_LINK_HERE once you upload to Google Drive or GHL -->
+      <a href="YOUR_PDF_LINK_HERE" class="dl-btn ghost" target="_blank">Download PDF</a>
     </div>
 
   </div>
 
+  <!-- OR DIVIDER -->
+  <div class="or-divider">or get it all emailed to you</div>
+
+  <!-- EMAIL FORM -->
+  <div class="email-box">
+    <h2>Want a copy sent to your inbox?</h2>
+    <p>Drop your email and we'll send everything right to you — so you can always find it even if you lose this page.</p>
+    <div id="email-form">
+      <div class="form-row">
+        <input class="email-input" type="email" id="email-field" placeholder="your@email.com" />
+        <button class="send-btn" onclick="submitEmail()">Send it to me</button>
+      </div>
+    </div>
+    <div class="form-success" id="form-success">
+      ✓ &nbsp;On its way! Check your inbox in the next few minutes.
+    </div>
+  </div>
+
+  <!-- QUICK START -->
   <div class="steps">
-    <h2>Quick start</h2>
+    <p class="steps-label">Quick start</p>
 
     <div class="step">
       <div class="step-num">1</div>
       <div>
-        <h4>Export your photos</h4>
-        <p>Snapchat: Settings → Memories → Export to Camera Roll. iPhone: Photos → Select → Save to Files. Dump everything into one folder called <em>Unsorted</em>.</p>
+        <h4>Export your photos first</h4>
+        <p>Snapchat: Settings → Memories → Export to Camera Roll. iPhone: Photos → Select → Save to Files. Dump into one folder called <em>Unsorted</em>.</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">2</div>
       <div>
-        <h4>Open the tool in Chrome</h4>
-        <p>Click "Open Tool" above. Click <strong>Choose Folder</strong> and select your Unsorted folder. Your first photo appears immediately.</p>
+        <h4>Open the right tool for you</h4>
+        <p>On a computer → use the Desktop Sorter in Chrome. On your phone or anywhere → use the Google Photos Sorter (sign in with Google, no setup needed).</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">3</div>
       <div>
-        <h4>Sort with one keypress each</h4>
+        <h4>One keypress per photo</h4>
         <div class="keys">
           <span class="key">T Travel</span>
           <span class="key">P Personal</span>
@@ -140,8 +226,8 @@
     <div class="step">
       <div class="step-num">4</div>
       <div>
-        <h4>Done</h4>
-        <p>Files move instantly on your computer. When the queue is empty, your photos are sorted. No extra steps.</p>
+        <h4>Done — for real</h4>
+        <p>Files move instantly. Albums create automatically. When the queue is empty, you're finished. No extra steps.</p>
       </div>
     </div>
 
@@ -153,5 +239,39 @@
   </footer>
 
 </div>
+
+<script>
+async function submitEmail() {
+  const email = document.getElementById('email-field').value.trim();
+  if (!email || !email.includes('@')) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  const btn = document.querySelector('.send-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    // POST to your GHL webhook — paste your webhook URL below
+    const GHL_WEBHOOK = 'YOUR_GHL_WEBHOOK_URL_HERE';
+
+    await fetch(GHL_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        tags: ['photo-sorter-buyer'],
+        source: 'thank-you-page',
+      }),
+    });
+  } catch(e) {
+    // Silently continue — don't block the success message on a network error
+  }
+
+  document.getElementById('email-form').style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+}
+</script>
 </body>
 </html>
