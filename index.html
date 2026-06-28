@@ -198,6 +198,85 @@
     text-align: center;
     font-size: 0.85rem;
   }
+
+  /* ── SETTINGS MODAL ── */
+  #settings-modal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  #settings-modal.open { display: flex; }
+
+  .settings-box {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .settings-box h3 { font-size: 1.1rem; font-weight: 400; color: #fff; margin-bottom: 6px; }
+  .settings-box > p { font-size: 0.82rem; color: #666; margin-bottom: 24px; }
+
+  .settings-row {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+
+  .settings-key-input, .settings-name-input {
+    background: #0f0f0f;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 10px 12px;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  .settings-key-input { font-family: monospace; font-size: 1rem; text-align: center; font-weight: 700; text-transform: uppercase; }
+  .settings-key-input:focus, .settings-name-input:focus { border-color: #555; }
+
+  .settings-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .settings-actions button {
+    flex: 1;
+    padding: 12px;
+    font-size: 0.88rem;
+  }
+
+  .btn-ghost {
+    background: transparent !important;
+    color: #888 !important;
+    border: 1px solid #2a2a2a !important;
+  }
+  .btn-ghost:hover { border-color: #555 !important; color: #fff !important; }
+
+  .customize-link {
+    background: none;
+    border: none;
+    color: #444;
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    font-family: inherit;
+  }
+  .customize-link:hover { color: #888; opacity: 1; }
 </style>
 </head>
 <body>
@@ -218,7 +297,21 @@
   </div>
 
   <button id="pick-btn">Choose Folder</button>
+  <button class="customize-link" onclick="openSettings()">customize folder names & keys</button>
   <p style="font-size:0.8rem; color:#555;">Requires Chrome or Edge · Files are moved directly on your Mac</p>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-modal">
+  <div class="settings-box">
+    <h3>Customize your folders</h3>
+    <p>Set the key and folder name for each of your 4 categories. Any single letter works.</p>
+    <div id="settings-rows"></div>
+    <div class="settings-actions">
+      <button class="btn-ghost" onclick="resetSettings()">Reset defaults</button>
+      <button onclick="saveSettings()">Save & close</button>
+    </div>
+  </div>
 </div>
 
 <div id="error-banner"></div>
@@ -253,12 +346,86 @@
 const IMAGE_EXTS = new Set(['jpg','jpeg','png','gif','webp','heic','heif','bmp','tiff','tif','avif']);
 const VIDEO_EXTS = new Set(['mp4','mov','avi','mkv','webm','m4v','3gp']);
 
-const FOLDERS = {
-  t: 'Travel',
-  p: 'Personal',
-  s: 'Stock',
-  a: 'Archive',
-};
+const DEFAULT_CONFIG = [
+  { key: 't', name: 'Travel' },
+  { key: 'p', name: 'Personal' },
+  { key: 's', name: 'Stock' },
+  { key: 'a', name: 'Archive' },
+];
+
+let folderConfig = JSON.parse(localStorage.getItem('ps_folder_config') || 'null') || DEFAULT_CONFIG;
+
+function buildFoldersMap() {
+  const m = {};
+  folderConfig.forEach(f => { m[f.key.toLowerCase()] = f.name; });
+  return m;
+}
+
+let FOLDERS = buildFoldersMap();
+
+// ── SETTINGS ──
+function openSettings() {
+  const rows = document.getElementById('settings-rows');
+  rows.innerHTML = folderConfig.map((f, i) => `
+    <div class="settings-row">
+      <input class="settings-key-input" maxlength="1" value="${f.key.toUpperCase()}" data-i="${i}" id="sk-${i}" />
+      <input class="settings-name-input" value="${f.name}" data-i="${i}" id="sn-${i}" placeholder="Folder name" />
+    </div>
+  `).join('');
+  document.getElementById('settings-modal').classList.add('open');
+}
+
+function saveSettings() {
+  const newConfig = folderConfig.map((_, i) => ({
+    key: (document.getElementById(`sk-${i}`).value.trim()[0] || 't').toLowerCase(),
+    name: document.getElementById(`sn-${i}`).value.trim() || DEFAULT_CONFIG[i].name,
+  }));
+  folderConfig = newConfig;
+  localStorage.setItem('ps_folder_config', JSON.stringify(folderConfig));
+  FOLDERS = buildFoldersMap();
+  updateStartScreen();
+  closeSettings();
+}
+
+function resetSettings() {
+  folderConfig = [...DEFAULT_CONFIG];
+  localStorage.removeItem('ps_folder_config');
+  FOLDERS = buildFoldersMap();
+  openSettings(); // re-render with defaults
+}
+
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('open');
+}
+
+document.getElementById('settings-modal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('settings-modal')) closeSettings();
+});
+
+function updateStartScreen() {
+  // Rebuild the kbd-grid rows for the 4 custom folders
+  const grid = document.querySelector('.kbd-grid');
+  const fixedRows = `
+    <div class="key">D</div><div class="label">Duplicate — copy added to end of queue</div>
+    <div class="key">→</div><div class="label">Skip (leave in place)</div>
+    <div class="key">U</div><div class="label">Undo last move</div>
+    <div class="key">Del</div><div class="label">Delete file (with confirm)</div>
+  `;
+  const customRows = folderConfig.map(f =>
+    `<div class="key">${f.key.toUpperCase()}</div><div class="label">Move to ${f.name}</div>`
+  ).join('');
+  grid.innerHTML = customRows + fixedRows;
+
+  // Update top-bar hints
+  const hints = document.getElementById('key-hints');
+  const fixedHints = `<div><b>D</b><span>Dupe</span></div><div><b>→</b><span>Skip</span></div><div><b>U</b><span>Undo</span></div>`;
+  hints.innerHTML = folderConfig.map(f =>
+    `<div><b>${f.key.toUpperCase()}</b><span>${f.name}</span></div>`
+  ).join('') + fixedHints;
+}
+
+// Apply on load
+updateStartScreen();
 
 let rootHandle = null;
 let files = [];       // array of FileSystemFileHandle
@@ -298,7 +465,10 @@ async function loadFiles() {
   files = [];
   index = 0;
   undoStack = [];
-  moved = { Travel: 0, Personal: 0, Stock: 0, Archive: 0, Deleted: 0, Skipped: 0 };
+  FOLDERS = buildFoldersMap();
+  moved = {};
+  folderConfig.forEach(f => { moved[f.name] = 0; });
+  moved.Deleted = 0; moved.Skipped = 0;
 
   for await (const [name, handle] of rootHandle.entries()) {
     if (handle.kind !== 'file') continue;
@@ -492,10 +662,7 @@ document.addEventListener('keydown', async (e) => {
 
   const k = e.key.toLowerCase();
 
-  if (k === 't') { e.preventDefault(); await moveFile('t'); }
-  else if (k === 'p') { e.preventDefault(); await moveFile('p'); }
-  else if (k === 's') { e.preventDefault(); await moveFile('s'); }
-  else if (k === 'a') { e.preventDefault(); await moveFile('a'); }
+  if (FOLDERS[k]) { e.preventDefault(); await moveFile(k); }
   else if (k === 'd') { e.preventDefault(); await duplicateFile(); }
   else if (k === 'arrowright') { e.preventDefault(); await skip(); }
   else if (k === 'u') { e.preventDefault(); await undoLast(); }

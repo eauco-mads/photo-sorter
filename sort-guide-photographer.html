@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cull & Organize Your Shoots — Print Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Lato:wght@300;400;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --black: #0a0a0a; --gold: #c9a84c; --text: #1a1a1a; --muted: #666; --border: #e0e0e0; --bg: #fafaf8; }
+  html, body { width: 210mm; min-height: 297mm; background: #e8e8e8; font-family: 'Lato', Helvetica, sans-serif; }
+  .page { width: 210mm; min-height: 297mm; background: #fff; margin: 0 auto; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+
+  .header { background: var(--black); padding: 36px 44px 32px; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.15); }
+  .header::after { content: ''; position: absolute; top: -20px; right: -20px; width: 140px; height: 140px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.1); }
+  .header-tag { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .header h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 300; color: #fff; line-height: 1.15; margin-bottom: 10px; }
+  .header-sub { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px; }
+  .gold-bar { height: 2px; background: linear-gradient(90deg, var(--gold), transparent); margin-top: 24px; }
+
+  .body { padding: 28px 44px; display: flex; flex-direction: column; gap: 22px; }
+
+  .step-block { display: grid; grid-template-columns: 28px 1fr; gap: 0 16px; }
+  .step-num { width: 28px; height: 28px; border: 1.5px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .step-content h2 { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 700; }
+  .step-content h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 19px; font-weight: 300; color: var(--black); margin-bottom: 12px; line-height: 1.2; }
+
+  .import-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .import-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .import-card h4 { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-weight: 700; }
+  .import-step { display: flex; gap: 8px; margin-bottom: 5px; font-size: 10.5px; color: var(--text); line-height: 1.4; align-items: flex-start; }
+  .import-step-num { background: var(--black); color: #fff; border-radius: 50%; width: 14px; height: 14px; min-width: 14px; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; margin-top: 1px; }
+
+  .tip { background: #fffbf0; border-left: 2px solid var(--gold); padding: 9px 12px; border-radius: 0 6px 6px 0; font-size: 10px; color: var(--muted); line-height: 1.5; margin-top: 10px; }
+  .tip strong { color: var(--text); }
+
+  /* Two preset systems side by side */
+  .system-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .system-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .system-header { background: var(--black); padding: 10px 14px; }
+  .system-header h4 { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  .system-header p { font-size: 9px; color: rgba(255,255,255,0.4); }
+  .system-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .system-row { display: flex; align-items: center; gap: 10px; }
+  .sys-key { background: var(--black); color: #fff; font-family: monospace; font-size: 11px; font-weight: 700; width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sys-name { font-size: 10.5px; color: var(--text); font-weight: 600; }
+  .sys-desc { font-size: 9.5px; color: var(--muted); }
+
+  .customize-note { background: #f8f4ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px 14px; margin-top: 10px; }
+  .customize-note p { font-size: 10px; color: #555; line-height: 1.6; }
+  .customize-note strong { color: var(--text); }
+
+  .key-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .key-card { text-align: center; }
+  .key-cap { background: var(--black); color: #fff; border-radius: 6px; padding: 8px 4px; font-family: monospace; font-size: 13px; font-weight: 700; display: block; margin-bottom: 5px; border-bottom: 2px solid #333; }
+  .key-label { font-size: 8.5px; color: var(--muted); line-height: 1.3; }
+  .key-cap.custom { background: #1a1040; }
+
+  .divider { height: 1px; background: var(--border); }
+
+  .footer { background: var(--black); padding: 16px 44px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-brand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.6); letter-spacing: 1px; }
+  .footer-url { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+
+  @media print { html, body { background: #fff; width: 210mm; } .page { margin: 0; } @page { size: A4; margin: 0; } .no-print { display: none !important; } }
+  @media screen { body { padding: 30px 0 60px; } .page { box-shadow: 0 8px 40px rgba(0,0,0,0.25); } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <p class="header-tag">Photo Organization System · Photographer Edition</p>
+    <h1>Cull &amp; Organize<br>Your Shoots Fast</h1>
+    <p class="header-sub">Import from any source · Set your own folder system · Sort in one session</p>
+    <div class="gold-bar"></div>
+  </div>
+
+  <div class="body">
+
+    <!-- STEP 1 -->
+    <div class="step-block">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h2>Step One</h2>
+        <h3>Get your images into one folder on your computer</h3>
+        <div class="import-cols">
+
+          <div class="import-card">
+            <h4>From SD Card / Camera</h4>
+            <div class="import-step"><span class="import-step-num">1</span><span>Plug in SD card or connect camera via USB</span></div>
+            <div class="import-step"><span class="import-step-num">2</span><span>Open <strong>Finder</strong> → locate the SD card under Locations</span></div>
+            <div class="import-step"><span class="import-step-num">3</span><span>Navigate to <strong>DCIM</strong> folder → select all → copy to a folder on your Desktop</span></div>
+            <div class="import-step"><span class="import-step-num">4</span><span>Or drag directly from Image Capture app (built into Mac)</span></div>
+          </div>
+
+          <div class="import-card">
+            <h4>From iPhone / Existing Folders</h4>
+            <div class="import-step"><span class="import-step-num">1</span><span>AirDrop a batch to your Mac, or plug in iPhone → open Image Capture</span></div>
+            <div class="import-step"><span class="import-step-num">2</span><span>Select all → import to a new folder</span></div>
+            <div class="import-step"><span class="import-step-num">3</span><span>For existing messy folders: just point the sorter at them directly</span></div>
+            <div class="import-step"><span class="import-step-num">4</span><span>Works with <strong>external hard drives</strong> too — no need to copy first</span></div>
+          </div>
+
+        </div>
+        <div class="tip"><strong>Pro tip:</strong> You don't need to copy files to sort them. Just point the tool at whatever folder or drive they're already on. Sort in place.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- STEP 2 -->
+    <div class="step-block">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h2>Step Two</h2>
+        <h3>Choose your folder system — or set your own</h3>
+        <div class="system-cols">
+
+          <div class="system-card">
+            <div class="system-header"><h4>Default system</h4><p>Good for mixed personal + commercial work</p></div>
+            <div class="system-body">
+              <div class="system-row"><div class="sys-key">T</div><div><div class="sys-name">Travel</div><div class="sys-desc">Location work, destination shoots</div></div></div>
+              <div class="system-row"><div class="sys-key">P</div><div><div class="sys-name">Personal</div><div class="sys-desc">Your own creative work</div></div></div>
+              <div class="system-row"><div class="sys-key">S</div><div><div class="sys-name">Stock</div><div class="sys-desc">Licensable, printable, sellable</div></div></div>
+              <div class="system-row"><div class="sys-key">A</div><div><div class="sys-name">Archive</div><div class="sys-desc">Keep but not active</div></div></div>
+            </div>
+          </div>
+
+          <div class="system-card">
+            <div class="system-header"><h4>Photographer system</h4><p>Set this up via "customize" on the tool</p></div>
+            <div class="system-body">
+              <div class="system-row"><div class="sys-key">K</div><div><div class="sys-name">Keepers</div><div class="sys-desc">Your selects — edit these</div></div></div>
+              <div class="system-row"><div class="sys-key">C</div><div><div class="sys-name">Clients</div><div class="sys-desc">Deliver these</div></div></div>
+              <div class="system-row"><div class="sys-key">S</div><div><div class="sys-name">Stock</div><div class="sys-desc">License or sell</div></div></div>
+              <div class="system-row"><div class="sys-key">R</div><div><div class="sys-name">Rejects</div><div class="sys-desc">Delete later in batch</div></div></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="customize-note">
+          <p><strong>You can set any key + any folder name.</strong> On the tool's start screen, click <strong>"customize folder names &amp; keys"</strong> before choosing your folder. Set it once — it saves automatically for next time.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- STEP 3 -->
+    <div class="step-block">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h2>Step Three</h2>
+        <h3>Sort — one keypress per image, files move instantly</h3>
+        <div class="key-grid">
+          <div class="key-card"><span class="key-cap custom">?</span><span class="key-label">Your key 1</span></div>
+          <div class="key-card"><span class="key-cap custom">?</span><span class="key-label">Your key 2</span></div>
+          <div class="key-card"><span class="key-cap custom">?</span><span class="key-label">Your key 3</span></div>
+          <div class="key-card"><span class="key-cap custom">?</span><span class="key-label">Your key 4</span></div>
+          <div class="key-card"><span class="key-cap">D</span><span class="key-label">Duplicate to 2 folders</span></div>
+          <div class="key-card"><span class="key-cap">→</span><span class="key-label">Skip</span></div>
+          <div class="key-card"><span class="key-cap">U</span><span class="key-label">Undo</span></div>
+        </div>
+        <div class="tip" style="margin-top:12px;"><strong>Open in Chrome or Edge:</strong> eauco-mads.github.io/photo-sorter · Click <strong>Choose Folder</strong> — works with your Desktop, any local folder, or an <strong>external hard drive</strong>. Folders are created automatically on first use. When the queue is empty — you're done.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-brand">Photo Organization System</span>
+    <span class="footer-url">eauco-mads.github.io/photo-sorter</span>
+  </div>
+
+</div>
+
+<div style="text-align:center;margin-top:24px;" class="no-print">
+  <button onclick="window.print()" style="background:#c9a84c;color:#000;font-weight:700;font-size:14px;padding:14px 32px;border:none;border-radius:8px;cursor:pointer;">Save as PDF (Cmd+P → Save as PDF)</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort Your Snap Memories — Print Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Lato:wght@300;400;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --black: #0a0a0a; --gold: #c9a84c; --snap: #FFFC00; --text: #1a1a1a; --muted: #666; --border: #e0e0e0; --bg: #fafaf8; }
+  html, body { width: 210mm; min-height: 297mm; background: #e8e8e8; font-family: 'Lato', Helvetica, sans-serif; }
+  .page { width: 210mm; min-height: 297mm; background: #fff; margin: 0 auto; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+
+  .header { background: var(--black); padding: 36px 44px 32px; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: -30px; right: 40px; font-size: 96px; opacity: 0.06; }
+  .snap-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--snap); color: #000; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; margin-bottom: 14px; }
+  .header h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 300; color: #fff; line-height: 1.15; margin-bottom: 10px; }
+  .header-sub { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px; }
+  .gold-bar { height: 2px; background: linear-gradient(90deg, var(--gold), transparent); margin-top: 24px; }
+
+  .body { padding: 28px 44px; display: flex; flex-direction: column; gap: 22px; }
+
+  .step-block { display: grid; grid-template-columns: 28px 1fr; gap: 0 16px; }
+  .step-num { width: 28px; height: 28px; border: 1.5px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .step-content h2 { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 700; }
+  .step-content h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 19px; font-weight: 300; color: var(--black); margin-bottom: 12px; line-height: 1.2; }
+
+  .snap-steps { display: flex; flex-direction: column; gap: 8px; }
+  .snap-step { display: flex; gap: 10px; align-items: flex-start; }
+  .snap-step-num { background: var(--snap); color: #000; border-radius: 50%; width: 18px; height: 18px; min-width: 18px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; margin-top: 1px; }
+  .snap-step p { font-size: 11px; color: var(--text); line-height: 1.5; }
+  .snap-step strong { color: var(--black); }
+
+  .tip { background: #fffbf0; border-left: 2px solid var(--gold); padding: 9px 12px; border-radius: 0 6px 6px 0; font-size: 10px; color: var(--muted); line-height: 1.5; margin-top: 10px; }
+  .tip strong { color: var(--text); }
+
+  .alert-box { background: #0a0a0a; border-radius: 10px; padding: 14px 18px; margin-top: 10px; }
+  .alert-box p { font-size: 10.5px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+  .alert-box strong { color: var(--snap); }
+
+  .folder-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .folder-card { background: var(--black); border-radius: 8px; padding: 12px 14px; text-align: center; }
+  .folder-letter { font-family: monospace; font-size: 18px; font-weight: 700; color: var(--gold); display: block; margin-bottom: 4px; }
+  .folder-name { font-size: 11px; font-weight: 700; color: #fff; display: block; margin-bottom: 4px; }
+  .folder-desc { font-size: 9px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+  .key-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .key-card { text-align: center; }
+  .key-cap { background: var(--black); color: #fff; border-radius: 6px; padding: 8px 4px; font-family: monospace; font-size: 13px; font-weight: 700; display: block; margin-bottom: 5px; border-bottom: 2px solid #333; }
+  .key-label { font-size: 8.5px; color: var(--muted); line-height: 1.3; }
+
+  .divider { height: 1px; background: var(--border); }
+
+  .footer { background: var(--black); padding: 16px 44px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-brand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.6); letter-spacing: 1px; }
+  .footer-url { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+
+  @media print { html, body { background: #fff; width: 210mm; } .page { margin: 0; box-shadow: none; } @page { size: A4; margin: 0; } .no-print { display: none !important; } }
+  @media screen { body { padding: 30px 0 60px; } .page { box-shadow: 0 8px 40px rgba(0,0,0,0.25); } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="snap-badge">👻 Snapchat Edition</div>
+    <h1>Sort Your Snap Memories<br>in 20 Minutes</h1>
+    <p class="header-sub">Export directly to your computer — no camera roll step needed</p>
+    <div class="gold-bar"></div>
+  </div>
+
+  <div class="body">
+
+    <!-- STEP 1 -->
+    <div class="step-block">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h2>Step One</h2>
+        <h3>Download your Snap Memories directly to your computer</h3>
+        <div class="snap-steps">
+          <div class="snap-step"><span class="snap-step-num">1</span><p>On your <strong>computer</strong>, go to <strong>accounts.snapchat.com</strong> and log in</p></div>
+          <div class="snap-step"><span class="snap-step-num">2</span><p>Click <strong>My Data</strong> in the left menu</p></div>
+          <div class="snap-step"><span class="snap-step-num">3</span><p>Scroll to <strong>Memories &amp; Snaps</strong> → click <strong>Submit Request</strong></p></div>
+          <div class="snap-step"><span class="snap-step-num">4</span><p>Snapchat emails you a download link — usually arrives within a few hours</p></div>
+          <div class="snap-step"><span class="snap-step-num">5</span><p>Click the link in the email → download the zip file → <strong>unzip it</strong></p></div>
+          <div class="snap-step"><span class="snap-step-num">6</span><p>Your photos and videos are now in a folder on your computer — ready to sort!</p></div>
+        </div>
+        <div class="alert-box">
+          <p><strong>⏱ Heads up:</strong> The download request can take a few hours. Submit it now, sort other photos while you wait, then come back and knock out your Memories when the email arrives.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- STEP 2 -->
+    <div class="step-block">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h2>Step Two</h2>
+        <h3>Your four folders — created automatically</h3>
+        <div class="folder-grid">
+          <div class="folder-card"><span class="folder-letter">T</span><span class="folder-name">Travel</span><span class="folder-desc">Trips, adventures, day-outs</span></div>
+          <div class="folder-card"><span class="folder-letter">P</span><span class="folder-name">Personal</span><span class="folder-desc">Friends, family, memories, life</span></div>
+          <div class="folder-card"><span class="folder-letter">S</span><span class="folder-name">Stock</span><span class="folder-desc">Shots worth posting or printing</span></div>
+          <div class="folder-card"><span class="folder-letter">A</span><span class="folder-name">Archive</span><span class="folder-desc">Not needed now, not ready to delete</span></div>
+        </div>
+        <div class="tip" style="margin-top:10px;"><strong>No setup needed:</strong> The tool creates these folders automatically the first time you press each key. Nothing to do beforehand.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- STEP 3 -->
+    <div class="step-block">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h2>Step Three</h2>
+        <h3>Open the tool and go — one keypress per photo</h3>
+        <div class="key-grid">
+          <div class="key-card"><span class="key-cap">T</span><span class="key-label">Travel</span></div>
+          <div class="key-card"><span class="key-cap">P</span><span class="key-label">Personal</span></div>
+          <div class="key-card"><span class="key-cap">S</span><span class="key-label">Stock</span></div>
+          <div class="key-card"><span class="key-cap">A</span><span class="key-label">Archive</span></div>
+          <div class="key-card"><span class="key-cap">D</span><span class="key-label">Duplicate to 2 places</span></div>
+          <div class="key-card"><span class="key-cap">→</span><span class="key-label">Skip</span></div>
+          <div class="key-card"><span class="key-cap">U</span><span class="key-label">Undo</span></div>
+        </div>
+        <div class="tip" style="margin-top:12px;"><strong>Open in Chrome:</strong> eauco-mads.github.io/photo-sorter · Click <strong>Choose Folder</strong> → navigate to your unzipped Snapchat folder → sort. Files move instantly. Queue empty = done.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-brand">Photo Organization System</span>
+    <span class="footer-url">eauco-mads.github.io/photo-sorter</span>
+  </div>
+
+</div>
+
+<div style="text-align:center;margin-top:24px;" class="no-print">
+  <button onclick="window.print()" style="background:#c9a84c;color:#000;font-weight:700;font-size:14px;padding:14px 32px;border:none;border-radius:8px;cursor:pointer;">Save as PDF (Cmd+P → Save as PDF)</button>
+</div>
+</body>
+</html>
