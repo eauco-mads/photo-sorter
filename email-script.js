@@ -4,10 +4,10 @@
 //  Instructions at the bottom of this file
 // ─────────────────────────────────────────────────────────────
 
-const PDF_LINK     = 'YOUR_PDF_LINK_HERE'; // swap once you upload to Drive
-const DESKTOP_LINK = 'https://eauco-mads.github.io/photo-sorter/';
-const GOOGLE_LINK  = 'https://eauco-mads.github.io/photo-sorter/google-photos.html';
-const YOUR_NAME    = 'Maddie';
+const SNAP_PDF_LINK  = 'https://drive.google.com/file/d/1eVezxvBbbswu6IqOFPVOge3Oc5aLdUjX/view';
+const PHOTO_PDF_LINK = 'https://drive.google.com/file/d/1y4U6gvId1TEWqFZDvJB3Qn4wa1OGojWn/view';
+const DESKTOP_LINK   = 'https://eauco-mads.github.io/photo-sorter/';
+const YOUR_NAME      = 'Maddie';
 
 function doPost(e) {
   try {
@@ -85,9 +85,9 @@ function buildEmail() {
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f8f8;border:1px solid #e8e8e8;border-radius:10px;margin-bottom:12px;">
           <tr>
             <td style="padding:20px 24px;">
-              <p style="margin:0 0 2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;">Desktop · Mac &amp; PC</p>
+              <p style="margin:0 0 2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;">Desktop · Mac &amp; PC · Chrome or Edge</p>
               <p style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;">Photo Sorter Tool</p>
-              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">Open in Chrome or Edge · keyboard shortcuts · files move instantly on your computer</p>
+              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">One keypress per photo · files move instantly · customize folder names &amp; keys on the start screen</p>
               <a href="${DESKTOP_LINK}" style="display:inline-block;background:#0a0a0a;color:#ffffff;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;">Open Tool →</a>
             </td>
           </tr>
@@ -97,10 +97,10 @@ function buildEmail() {
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f8f8;border:1px solid #e8e8e8;border-radius:10px;margin-bottom:12px;">
           <tr>
             <td style="padding:20px 24px;">
-              <p style="margin:0 0 2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;">Any device · Any browser</p>
-              <p style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;">Google Photos Sorter</p>
-              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">Works on iPhone, Android, anywhere · sorts into albums in your Google Photos library</p>
-              <a href="${GOOGLE_LINK}" style="display:inline-block;background:#0a0a0a;color:#ffffff;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;">Open Tool →</a>
+              <p style="margin:0 0 2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;">PDF Guide · Snapchat Edition</p>
+              <p style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;">Sort Your Snap Memories</p>
+              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">How to download your Memories directly to your computer + iPhone export + the full folder system</p>
+              <a href="${SNAP_PDF_LINK}" style="display:inline-block;background:#c9a84c;color:#000000;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;">Download PDF →</a>
             </td>
           </tr>
         </table>
@@ -109,10 +109,10 @@ function buildEmail() {
         <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f8f8;border:1px solid #e8e8e8;border-radius:10px;margin-bottom:28px;">
           <tr>
             <td style="padding:20px 24px;">
-              <p style="margin:0 0 2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;">PDF Guide</p>
-              <p style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;">20-Minute Sort Guide</p>
-              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">Export from Snapchat &amp; iPhone · the 4-folder system explained · print it or keep it open</p>
-              <a href="${PDF_LINK}" style="display:inline-block;background:#c9a84c;color:#000000;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;">Download PDF →</a>
+              <p style="margin:0 0 2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;">PDF Guide · Photographer Edition</p>
+              <p style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;">Cull &amp; Organize Your Shoots</p>
+              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">Import from SD card, iPhone, or hard drive · default + custom folder systems · sort in one session</p>
+              <a href="${PHOTO_PDF_LINK}" style="display:inline-block;background:#c9a84c;color:#000000;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;">Download PDF →</a>
             </td>
           </tr>
         </table>
@@ -129,12 +129,12 @@ function buildEmail() {
                     <span style="font-size:12px;color:#888;margin-left:6px;">Travel</span>
                   </td>
                   <td style="padding:3px 10px 3px 0;">
-                    <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">P</span>
-                    <span style="font-size:12px;color:#888;margin-left:6px;">Personal</span>
+                    <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">S</span>
+                    <span style="font-size:12px;color:#888;margin-left:6px;">Stock/Print</span>
                   </td>
                   <td style="padding:3px 10px 3px 0;">
-                    <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">S</span>
-                    <span style="font-size:12px;color:#888;margin-left:6px;">Stock</span>
+                    <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">B</span>
+                    <span style="font-size:12px;color:#888;margin-left:6px;">Business</span>
                   </td>
                 </tr>
                 <tr>
