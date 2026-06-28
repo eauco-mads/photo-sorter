@@ -134,7 +134,7 @@ function buildEmail() {
                   </td>
                   <td style="padding:3px 10px 3px 0;">
                     <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">B</span>
-                    <span style="font-size:12px;color:#888;margin-left:6px;">Business</span>
+                    <span style="font-size:12px;color:#888;margin-left:6px;">Best</span>
                   </td>
                 </tr>
                 <tr>
