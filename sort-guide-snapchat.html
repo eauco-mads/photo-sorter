@@ -10,7 +10,7 @@
   :root { --black: #0a0a0a; --gold: #c9a84c; --text: #1a1a1a; --muted: #555; --border: #ddd; --bg: #f9f9f7; }
 
   body { font-family: 'Lato', Helvetica, sans-serif; background: #e0e0e0; }
-  .page { background: #fff; display: flex; flex-direction: column; }
+  .page { background: #fff; }
 
   /* HEADER */
   .header { background: var(--black); padding: 44px 56px 40px; position: relative; overflow: hidden; }
@@ -21,10 +21,11 @@
   .gold-bar { height: 2px; background: linear-gradient(90deg, var(--gold), transparent); margin-top: 28px; }
 
   /* BODY */
-  .body { padding: 44px 56px; display: flex; flex-direction: column; gap: 36px; }
+  .body { padding: 44px 56px 36px; }
+  .body-p2 { padding: 44px 56px 36px; }
 
   /* STEP BLOCKS */
-  .step-block { display: grid; grid-template-columns: 40px 1fr; gap: 0 20px; }
+  .step-block { display: grid; grid-template-columns: 40px 1fr; gap: 0 20px; margin-bottom: 36px; }
   .step-num { width: 40px; height: 40px; border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 3px; }
   .step-content h2 { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-weight: 700; }
   .step-content h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 300; color: var(--black); margin-bottom: 20px; line-height: 1.25; }
@@ -36,10 +37,6 @@
   .export-step { display: flex; gap: 12px; margin-bottom: 11px; font-size: 13px; color: var(--text); line-height: 1.55; align-items: flex-start; }
   .export-step:last-child { margin-bottom: 0; }
   .export-step-num { background: var(--black); color: #fff; border-radius: 50%; width: 20px; height: 20px; min-width: 20px; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 700; margin-top: 2px; }
-
-  /* TIP */
-  .tip { background: #fffbf0; border-left: 3px solid var(--gold); padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 13px; color: var(--muted); line-height: 1.7; margin-top: 16px; }
-  .tip strong { color: var(--text); }
 
   /* SYSTEM CARDS */
   .system-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -59,43 +56,38 @@
   .key-cap { background: var(--black); color: #fff; border-radius: 8px; padding: 14px 4px; font-family: monospace; font-size: 20px; font-weight: 700; display: block; margin-bottom: 8px; border-bottom: 3px solid #333; }
   .key-label { font-size: 10px; color: var(--muted); line-height: 1.4; }
 
+  /* TIP */
+  .tip { background: #fffbf0; border-left: 3px solid var(--gold); padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 13px; color: var(--muted); line-height: 1.7; margin-top: 16px; }
+  .tip strong { color: var(--text); }
+
   /* CUSTOMIZE BOX */
   .customize-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-top: 16px; font-size: 13px; color: var(--muted); line-height: 1.7; }
   .customize-box strong { color: var(--text); }
 
   /* DIVIDER */
-  .divider { height: 1px; background: var(--border); }
+  .divider { height: 1px; background: var(--border); margin: 0 56px; }
 
   /* FOOTER */
-  .footer { background: var(--black); padding: 20px 56px; display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .footer { background: var(--black); padding: 20px 56px; display: flex; align-items: center; justify-content: space-between; }
   .footer-brand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 15px; font-weight: 300; color: rgba(255,255,255,0.55); letter-spacing: 1px; }
   .footer-url { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
 
-  /* SCREEN PREVIEW */
+  /* SCREEN */
   @media screen {
     body { padding: 30px 0 60px; }
     html, body { min-width: 816px; }
     .page { width: 816px; margin: 0 auto; box-shadow: 0 8px 40px rgba(0,0,0,0.2); }
   }
 
-  /* PRINT */
+  /* PRINT — Safari fix: page must be display:block for page-break-before to work on children */
   @media print {
     body { background: #fff; }
-    .page { width: 100%; box-shadow: none; }
     @page { size: letter; margin: 0; }
+    .page { display: block; width: 100%; box-shadow: none; }
 
-    /* Force page break after Step 1 so Steps 2+3+footer land cleanly on page 2.
-       Safari ignores break-inside:avoid on grid/flex, so an explicit break-after
-       on the first divider is the only reliable way to control page layout. */
-    .divider-1        { page-break-after: always !important; break-after: always !important; }
+    /* Page 2 starts here — this is a block child of a block parent, Safari respects it */
+    .body-p2 { page-break-before: always !important; break-before: page !important; }
 
-    /* Secondary protection for inner elements */
-    .system-cols      { page-break-inside: avoid; break-inside: avoid; }
-    .export-cols      { page-break-inside: avoid; break-inside: avoid; }
-    .key-grid         { page-break-inside: avoid; break-inside: avoid; }
-    .customize-box    { page-break-inside: avoid; break-inside: avoid; }
-    .tip              { page-break-inside: avoid; break-inside: avoid; }
-    .footer           { page-break-inside: avoid; break-inside: avoid; }
     .no-print { display: none !important; }
   }
 </style>
@@ -110,9 +102,8 @@
     <div class="gold-bar"></div>
   </div>
 
+  <!-- PAGE 1: Header + Step 1 -->
   <div class="body">
-
-    <!-- STEP 1 -->
     <div class="step-block">
       <div class="step-num">01</div>
       <div class="step-content">
@@ -124,7 +115,7 @@
             <div class="export-step"><span class="export-step-num">1</span><span>On your <strong>computer</strong>, go to <strong>accounts.snapchat.com</strong> and log in</span></div>
             <div class="export-step"><span class="export-step-num">2</span><span>Click <strong>My Data</strong>, scroll to Memories, click <strong>Submit Request</strong></span></div>
             <div class="export-step"><span class="export-step-num">3</span><span>Snapchat emails you a download link within a few hours</span></div>
-            <div class="export-step"><span class="export-step-num">4</span><span>Click the link in the email, download the zip, and unzip it. Done — your memories are on your computer ready to sort</span></div>
+            <div class="export-step"><span class="export-step-num">4</span><span>Click the link in the email, download the zip, and unzip it. Your memories are on your computer ready to sort</span></div>
           </div>
           <div class="export-card">
             <h4>Also have iPhone photos to sort?</h4>
@@ -137,10 +128,11 @@
         <div class="tip"><strong>Create one folder on your Desktop called Unsorted</strong> and drop everything in there. Snap memories, iPhone photos, all of it in one place. That is all the setup you need.</div>
       </div>
     </div>
+  </div>
 
-    <div class="divider divider-1"></div>
+  <!-- PAGE 2: Steps 2 + 3 + Footer -->
+  <div class="body-p2">
 
-    <!-- STEP 2 -->
     <div class="step-block">
       <div class="step-num">02</div>
       <div class="step-content">
@@ -176,9 +168,8 @@
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider" style="margin: 0 0 36px;"></div>
 
-    <!-- STEP 3 -->
     <div class="step-block">
       <div class="step-num">03</div>
       <div class="step-content">
@@ -188,13 +179,12 @@
           <div class="key-card"><span class="key-cap">T</span><span class="key-label">Travel</span></div>
           <div class="key-card"><span class="key-cap">S</span><span class="key-label">Stock/Print</span></div>
           <div class="key-card"><span class="key-cap">B</span><span class="key-label">Best</span></div>
-          <div class="key-card"><span class="key-cap">A</span><span class="key-label">Archive/ Personal</span></div>
+          <div class="key-card"><span class="key-cap">A</span><span class="key-label">Archive/Personal</span></div>
           <div class="key-card"><span class="key-cap">D</span><span class="key-label">Duplicate to 2 folders</span></div>
           <div class="key-card"><span class="key-cap">→</span><span class="key-label">Skip for now</span></div>
           <div class="key-card"><span class="key-cap">U</span><span class="key-label">Undo last move</span></div>
         </div>
-        <div class="customize-box"><strong>Want different folder names or keys?</strong> On the start screen, click "customize folder names and keys" before choosing your folder. Change anything you want and it saves automatically for every session after that.</div>
-        <div class="tip" style="margin-top:16px;"><strong>Open in Chrome:</strong> eauco-mads.github.io/photo-sorter. Click <strong>Choose Folder</strong>, pick your Unsorted folder, and start sorting. Files move the second you press a key. When the queue is empty you are done.</div>
+        <div class="tip" style="margin-top:16px;"><strong>Open in Chrome:</strong> eauco-mads.github.io/photo-sorter — Click <strong>Choose Folder</strong>, pick your Unsorted folder, and start sorting. Files move the second you press a key. When the queue is empty you are done.</div>
       </div>
     </div>
 
@@ -208,8 +198,8 @@
 </div>
 
 <div style="text-align:center;margin-top:28px;" class="no-print">
-  <button onclick="window.print()" style="background:#c9a84c;color:#000;font-weight:700;font-size:15px;padding:16px 36px;border:none;border-radius:8px;cursor:pointer;letter-spacing:0.5px;">Save as PDF (Cmd+P, Save as PDF)</button>
-  <p style="color:#888;font-size:13px;margin-top:10px;">Open in Chrome for best results. Cmd+P, change destination to Save as PDF.</p>
+  <button onclick="window.print()" style="background:#c9a84c;color:#000;font-weight:700;font-size:15px;padding:16px 36px;border:none;border-radius:8px;cursor:pointer;letter-spacing:0.5px;">Save as PDF</button>
+  <p style="color:#888;font-size:13px;margin-top:10px;">Cmd+P → change destination to "Save as PDF" — Paper Size: US Letter, Scale: 100%</p>
 </div>
 </body>
 </html>
