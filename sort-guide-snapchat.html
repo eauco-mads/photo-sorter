@@ -84,14 +84,17 @@
     .page { width: 100%; box-shadow: none; }
     @page { size: letter; margin: 0; }
 
-    /* keep each step together — no mid-step page breaks */
-    .step-block       { page-break-inside: avoid; break-inside: avoid; }
+    /* Force page break after Step 1 so Steps 2+3+footer land cleanly on page 2.
+       Safari ignores break-inside:avoid on grid/flex, so an explicit break-after
+       on the first divider is the only reliable way to control page layout. */
+    .divider-1        { page-break-after: always !important; break-after: always !important; }
+
+    /* Secondary protection for inner elements */
+    .system-cols      { page-break-inside: avoid; break-inside: avoid; }
     .export-cols      { page-break-inside: avoid; break-inside: avoid; }
-    .folder-grid      { page-break-inside: avoid; break-inside: avoid; }
     .key-grid         { page-break-inside: avoid; break-inside: avoid; }
     .customize-box    { page-break-inside: avoid; break-inside: avoid; }
     .tip              { page-break-inside: avoid; break-inside: avoid; }
-    .divider          { page-break-after:  avoid; break-after:  avoid; }
     .footer           { page-break-inside: avoid; break-inside: avoid; }
     .no-print { display: none !important; }
   }
@@ -135,7 +138,7 @@
       </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider divider-1"></div>
 
     <!-- STEP 2 -->
     <div class="step-block">
