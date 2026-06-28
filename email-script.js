@@ -98,8 +98,8 @@ function buildEmail() {
           <tr>
             <td style="padding:20px 24px;">
               <p style="margin:0 0 2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;">PDF Guide · Snapchat Edition</p>
-              <p style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;">Sort Your Snap Memories</p>
-              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">How to download your Memories directly to your computer + iPhone export + the full folder system</p>
+              <p style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;">5-Minute Guide: Sort Your Snap Memories</p>
+              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">How to download your Memories directly to your computer, iPhone export steps, and the full folder system</p>
               <a href="${SNAP_PDF_LINK}" style="display:inline-block;background:#c9a84c;color:#000000;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;">Download PDF →</a>
             </td>
           </tr>
@@ -110,8 +110,8 @@ function buildEmail() {
           <tr>
             <td style="padding:20px 24px;">
               <p style="margin:0 0 2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;font-weight:700;">PDF Guide · Photographer Edition</p>
-              <p style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;">Cull &amp; Organize Your Shoots</p>
-              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">Import from SD card, iPhone, or hard drive · default + custom folder systems · sort in one session</p>
+              <p style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;">5-Minute Guide: Cull &amp; Organize Your Shoots</p>
+              <p style="margin:0 0 16px;font-size:13px;color:#888;line-height:1.5;">Import from SD card, iPhone, or hard drive. Default and custom folder systems. Sort everything in one session.</p>
               <a href="${PHOTO_PDF_LINK}" style="display:inline-block;background:#c9a84c;color:#000000;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;">Download PDF →</a>
             </td>
           </tr>
