@@ -9,7 +9,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --black: #0a0a0a; --gold: #c9a84c; --text: #1a1a1a; --muted: #666; --border: #e0e0e0; --bg: #fafaf8; }
   html, body { width: 210mm; background: #e8e8e8; font-family: 'Lato', Helvetica, sans-serif; }
-  .page { width: 210mm; height: 297mm; background: #fff; margin: 0 auto; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+  .page { width: 210mm; background: #fff; margin: 0 auto; display: flex; flex-direction: column; }
 
   .header { background: var(--black); padding: 22px 40px 18px; position: relative; overflow: hidden; }
   .header::before { content: ''; position: absolute; top: -30px; right: -30px; width: 160px; height: 160px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.12); }
@@ -60,7 +60,7 @@
   .footer-brand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.6); letter-spacing: 1px; }
   .footer-url { font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
 
-  @media print { html, body { background: #fff; width: 210mm; } .page { margin: 0; box-shadow: none; } @page { size: A4; margin: 0; } .no-print { display: none !important; } }
+  @media print { html, body { background: #fff; width: 210mm; } .page { margin: 0; box-shadow: none; } @page { size: 210mm auto; margin: 0; } .no-print { display: none !important; } }
   @media screen { body { padding: 30px 0 60px; } .page { box-shadow: 0 8px 40px rgba(0,0,0,0.25); } }
 </style>
 </head>

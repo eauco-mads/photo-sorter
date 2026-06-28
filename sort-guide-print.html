@@ -21,20 +21,16 @@
 
   html, body {
     width: 210mm;
-    min-height: 297mm;
     background: #e8e8e8;
     font-family: 'Lato', Helvetica, sans-serif;
   }
 
   .page {
     width: 210mm;
-    min-height: 297mm;
     background: #fff;
     margin: 0 auto;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    position: relative;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   /* ── HEADER ── */
@@ -212,7 +208,7 @@
   @media print {
     html, body { background: #fff; width: 210mm; }
     .page { margin: 0; box-shadow: none; }
-    @page { size: A4; margin: 0; }
+    @page { size: 210mm auto; margin: 0; }
   }
 
   /* ── SCREEN PREVIEW ── */
