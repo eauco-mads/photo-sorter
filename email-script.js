@@ -4,8 +4,8 @@
 //  Instructions at the bottom of this file
 // ─────────────────────────────────────────────────────────────
 
-const SNAP_PDF_LINK  = 'https://drive.google.com/file/d/1eVezxvBbbswu6IqOFPVOge3Oc5aLdUjX/view';
-const PHOTO_PDF_LINK = 'https://drive.google.com/file/d/1y4U6gvId1TEWqFZDvJB3Qn4wa1OGojWn/view';
+const SNAP_PDF_LINK  = 'https://drive.google.com/file/d/1FQSN76Vmw56FTuQtWZ66qHI6mlJKUSJD/view';
+const PHOTO_PDF_LINK = 'https://drive.google.com/file/d/1C4sTU7RbAauA1tHt2vNo2XliUkSZ5TT2/view';
 const DESKTOP_LINK   = 'https://eauco-mads.github.io/photo-sorter/';
 const YOUR_NAME      = 'Maddie';
 
@@ -130,7 +130,7 @@ function buildEmail() {
                   </td>
                   <td style="padding:3px 10px 3px 0;">
                     <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">S</span>
-                    <span style="font-size:12px;color:#888;margin-left:6px;">Stock/Print</span>
+                    <span style="font-size:12px;color:#888;margin-left:6px;">Stock-Print</span>
                   </td>
                   <td style="padding:3px 10px 3px 0;">
                     <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">B</span>

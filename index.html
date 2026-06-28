@@ -386,15 +386,24 @@ const VIDEO_EXTS = new Set(['mp4','mov','avi','mkv','webm','m4v','3gp']);
 // ── CONFIG ───────────────────────────────────────────────────────
 const DEFAULT_CONFIG = [
   { key: 't', name: 'Travel' },
-  { key: 's', name: 'Stock/Print' },
+  { key: 's', name: 'Stock-Print' },
   { key: 'b', name: 'Best' },
-  { key: 'a', name: 'Archive/Personal' },
+  { key: 'a', name: 'Archive' },
 ];
+
+// Slashes and other chars that OS filesystems reject as folder names
+function safeFolderName(name) {
+  return name.replace(/[/\\:*?"<>|]/g, '-').replace(/-{2,}/g, '-').trim() || 'Folder';
+}
 
 function loadConfig() {
   try {
     const saved = localStorage.getItem('ps_folder_config');
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Silently fix any names that have filesystem-illegal characters
+      return parsed.map(f => ({ ...f, name: safeFolderName(f.name) }));
+    }
   } catch(e) {}
   return DEFAULT_CONFIG.map(f => ({ ...f }));
 }
@@ -603,7 +612,7 @@ async function moveFile(key) {
   const file = await handle.getFile();
 
   try {
-    const destDir = await rootHandle.getDirectoryHandle(folderName, { create: true });
+    const destDir = await rootHandle.getDirectoryHandle(safeFolderName(folderName), { create: true });
     const ab = await file.arrayBuffer();
 
     const newHandle = await destDir.getFileHandle(file.name, { create: true });
