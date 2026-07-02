@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Photo Sorter</title>
+<title>Snap Memory Sorter</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -34,6 +34,14 @@
     font-weight: 300;
     letter-spacing: 2px;
     color: #fff;
+  }
+
+  #start-screen .subtitle {
+    font-size: 0.82rem;
+    color: #555;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: -12px;
   }
 
   #start-screen > p {
@@ -216,6 +224,7 @@
   }
 
   #progress-text { font-size: 0.85rem; color: #888; }
+  #folder-label { font-size: 0.72rem; color: #444; margin-top: 2px; }
   #filename { font-size: 0.85rem; color: #ccc; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   #key-hints {
@@ -244,6 +253,16 @@
     border-radius: 4px;
   }
 
+  .no-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #555;
+    text-align: center;
+  }
+  .no-preview small { font-size: 0.8rem; color: #3a3a3a; }
+
   /* ── DONE SCREEN ── */
   #done-screen {
     display: none;
@@ -257,7 +276,28 @@
   }
 
   #done-screen h2 { font-size: 1.6rem; font-weight: 300; }
-  #done-screen p { color: #888; }
+
+  #done-folder-msg {
+    color: #888;
+    font-size: 0.88rem;
+    line-height: 1.8;
+    max-width: 440px;
+  }
+
+  .finder-path {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 0.82rem;
+    color: #666;
+    text-align: left;
+    max-width: 440px;
+    width: 100%;
+    line-height: 2;
+  }
+  .finder-path .folder-name { color: #c9a84c; font-weight: 600; }
+  .finder-path .sub { color: #aaa; margin-left: 16px; }
 
   #stats {
     background: #1a1a1a;
@@ -313,29 +353,6 @@
   #undo-bar.visible { opacity: 1; }
   #undo-bar b { color: #fff; font-family: monospace; }
 
-  #folder-label {
-    font-size: 0.72rem;
-    color: #444;
-    margin-top: 2px;
-  }
-
-  .no-preview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    color: #555;
-    text-align: center;
-  }
-  .no-preview small { font-size: 0.8rem; color: #3a3a3a; }
-
-  #done-folder-msg {
-    color: #888;
-    font-size: 0.88rem;
-    line-height: 1.7;
-    max-width: 440px;
-  }
-
   /* ── ERROR ── */
   #error-banner {
     display: none;
@@ -350,8 +367,9 @@
 <body>
 
 <div id="start-screen">
-  <h1>Photo Sorter</h1>
-  <p>Pick your photos folder. Sort one by one with keyboard shortcuts. Files move instantly — no extra steps.</p>
+  <h1>Snap Memory Sorter</h1>
+  <p class="subtitle">personal edition</p>
+  <p>Open your Snap Memories folder. Sort one photo at a time with keyboard shortcuts — files move instantly. <span style="color:#555">Stop anytime, come back later — the tool only shows unsorted files.</span></p>
 
   <div class="kbd-grid" id="kbd-grid">
     <!-- populated by renderStartScreen() -->
@@ -360,7 +378,7 @@
   <div class="start-actions">
     <button id="pick-btn">Choose Folder</button>
     <button id="customize-btn">customize folder names &amp; keys</button>
-    <p style="font-size:0.8rem; color:#444;">Requires Chrome or Edge · Files move directly on your computer</p>
+    <p style="font-size:0.8rem; color:#444;">Chrome only · Files move directly on your Mac</p>
   </div>
 </div>
 
@@ -368,7 +386,7 @@
 <div id="settings-overlay">
   <div id="settings-box">
     <h3>Customize Folder Names &amp; Keys</h3>
-    <p>Set any single letter as a key. Your settings save automatically and work for anyone using the tool.</p>
+    <p>Set any single letter as a key. Saves automatically so you never have to set it again.</p>
     <div id="settings-rows">
       <!-- populated by openSettings() -->
     </div>
@@ -399,8 +417,15 @@
 <div id="done-screen">
   <h2>All done!</h2>
   <p id="done-folder-msg"></p>
+  <div id="finder-path-box" class="finder-path" style="display:none;"></div>
   <div id="stats"></div>
-  <button id="restart-btn">Sort Another Folder</button>
+  <div style="background:#111; border-radius:10px; padding:18px 22px; max-width:440px; width:100%; text-align:left; font-size:0.82rem; line-height:1.9; color:#555; margin-top:4px;">
+    <div style="color:#888; font-size:0.72rem; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px;">What's next</div>
+    <div><span style="color:#c9a84c;">◆</span> <strong style="color:#aaa;">More to sort?</strong> Drag more extracted files into your Snap Memories folder, then hit Sort Another Round.</div>
+    <div><span style="color:#c9a84c;">◆</span> <strong style="color:#aaa;">Sort deeper?</strong> Pick a sub-folder (like Travel/) and customize your keys for specific categories — they sort right into it.</div>
+    <div><span style="color:#c9a84c;">◆</span> <strong style="color:#aaa;">Going back to broad sort?</strong> Hit "customize" → Reset to Defaults before your next broad session.</div>
+  </div>
+  <button id="restart-btn">Sort Another Round</button>
 </div>
 
 <div id="toast"></div>
@@ -413,22 +438,23 @@ const VIDEO_EXTS = new Set(['mp4','mov','avi','mkv','webm','m4v','3gp']);
 // ── CONFIG ───────────────────────────────────────────────────────
 const DEFAULT_CONFIG = [
   { key: 't', name: 'Travel' },
-  { key: 's', name: 'Stock-Print' },
+  { key: 'p', name: 'People' },
   { key: 'b', name: 'Best' },
+  { key: 'f', name: 'Funny' },
   { key: 'a', name: 'Archive' },
 ];
 
-// Slashes and other chars that OS filesystems reject as folder names
+const STORAGE_KEY = 'snap_folder_config';
+
 function safeFolderName(name) {
   return name.replace(/[/\\:*?"<>|]/g, '-').replace(/-{2,}/g, '-').trim() || 'Folder';
 }
 
 function loadConfig() {
   try {
-    const saved = localStorage.getItem('ps_folder_config');
+    const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      // Silently fix any names that have filesystem-illegal characters
       return parsed.map(f => ({ ...f, name: safeFolderName(f.name) }));
     }
   } catch(e) {}
@@ -500,7 +526,7 @@ function saveSettings() {
 
   folderConfig = newConfig;
   FOLDERS = buildFolders();
-  localStorage.setItem('ps_folder_config', JSON.stringify(folderConfig));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(folderConfig));
   renderStartScreen();
   closeSettings();
 }
@@ -508,7 +534,7 @@ function saveSettings() {
 function resetSettings() {
   folderConfig = DEFAULT_CONFIG.map(f => ({ ...f }));
   FOLDERS = buildFolders();
-  localStorage.removeItem('ps_folder_config');
+  localStorage.removeItem(STORAGE_KEY);
   renderStartScreen();
   closeSettings();
 }
@@ -518,12 +544,10 @@ document.getElementById('settings-save-btn').addEventListener('click', saveSetti
 document.getElementById('settings-cancel-btn').addEventListener('click', closeSettings);
 document.getElementById('settings-reset-btn').addEventListener('click', resetSettings);
 
-// close modal if clicking the dark overlay
 document.getElementById('settings-overlay').addEventListener('click', function(e) {
   if (e.target === this) closeSettings();
 });
 
-// force key inputs to uppercase as you type
 document.addEventListener('input', function(e) {
   if (e.target.classList.contains('settings-key-input')) {
     const val = e.target.value.replace(/[^a-zA-Z]/g, '').slice(-1).toUpperCase();
@@ -567,7 +591,6 @@ pickBtn.addEventListener('click', async () => {
 });
 
 async function loadFiles() {
-  // rebuild from current config in case settings changed before choosing folder
   FOLDERS = buildFolders();
   renderKeyHints();
 
@@ -588,7 +611,7 @@ async function loadFiles() {
   files.sort((a, b) => a.name.localeCompare(b.name));
 
   if (files.length === 0) {
-    showError('No photos or videos found in that folder.');
+    showError('No unsorted files found — you\'re all done with this batch! Extract more zip files into this folder and run again to continue.');
     return;
   }
 
@@ -609,7 +632,7 @@ async function showCurrent() {
   try {
     file = await handle.getFile();
   } catch(e) {
-    // stale handle crept in — drop and continue
+    // stale handle — drop and continue
     files.splice(index, 1);
     await showCurrent();
     return;
@@ -654,7 +677,7 @@ async function moveFile(key) {
   try {
     file = await handle.getFile();
   } catch(e) {
-    // stale handle — drop it and move on
+    // stale handle — drop and move on
     files.splice(index, 1);
     await showCurrent();
     return;
@@ -767,13 +790,19 @@ function finish() {
 
   if (rootHandle) {
     const fname = rootHandle.name;
-    const sortedFolders = folderConfig
-      .filter(f => (moved[f.name] || 0) > 0)
-      .map(f => `${f.name} (${moved[f.name]})`)
-      .join('  ·  ');
     document.getElementById('done-folder-msg').innerHTML =
-      `Open <strong>"${fname}"</strong> in Finder to find your sorted folders.` +
-      (sortedFolders ? `<br>${sortedFolders}` : '');
+      `Your sorted folders are inside <strong>"${fname}"</strong> — open that folder in Finder to find them.`;
+
+    const createdFolders = folderConfig.filter(f => (moved[f.name] || 0) > 0);
+    if (createdFolders.length > 0) {
+      const pathBox = document.getElementById('finder-path-box');
+      pathBox.style.display = 'block';
+      pathBox.innerHTML =
+        `<span class="folder-name">📁 ${fname}</span>` +
+        createdFolders.map(f =>
+          `<div class="sub">└ ${f.name}/  <span style="color:#555">${moved[f.name]} file${moved[f.name] !== 1 ? 's' : ''}</span></div>`
+        ).join('');
+    }
   }
 
   const rows = Object.entries(moved)
@@ -786,6 +815,7 @@ function finish() {
 
 document.getElementById('restart-btn').addEventListener('click', () => {
   doneScreen.style.display = 'none';
+  document.getElementById('finder-path-box').style.display = 'none';
   startScreen.style.display = 'flex';
   rootHandle = null;
   files = [];
@@ -793,7 +823,6 @@ document.getElementById('restart-btn').addEventListener('click', () => {
 
 // ── KEYBOARD ─────────────────────────────────────────────────────
 document.addEventListener('keydown', async (e) => {
-  // don't fire shortcuts when typing in settings
   if (document.getElementById('settings-overlay').classList.contains('open')) return;
   if (app.style.display === 'none') return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;

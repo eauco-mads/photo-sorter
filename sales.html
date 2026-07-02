@@ -455,6 +455,74 @@
 
   @media (max-width: 480px) { .waitlist-row { flex-direction: column; } }
 
+  /* ── STAT CALLOUT ── */
+  .stat-callout {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--dark);
+    padding: 44px 24px;
+    text-align: center;
+  }
+  .stat-callout-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .stat-num {
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-weight: 200;
+    color: var(--gold);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .stat-detail {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.7;
+    text-align: left;
+  }
+  .stat-detail span { font-size: 0.78rem; color: #3a3a3a; display: block; margin-top: 2px; }
+
+  /* ── TIPS ── */
+  .tips {
+    padding: 80px 24px;
+  }
+  .tips-inner { max-width: 860px; margin: 0 auto; }
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .tip-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+  }
+  .tip-key {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .tip-card h4 {
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .tip-card p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
   /* ── FOOTER ── */
   footer {
     border-top: 1px solid var(--border);
@@ -473,13 +541,24 @@
 <section class="hero">
   <p class="eyebrow">Digital Download · Instant Access</p>
   <h1>Stop losing your best shots<br>in a camera roll you'll<br><em>never scroll through again.</em></h1>
-  <p class="hero-sub">One keypress per photo. Files move instantly on your computer. No uploads, no apps, no monthly fee. Pay once, open in Chrome, and actually finish organizing your photos today.</p>
+  <p class="hero-sub">One keypress per photo. Files move instantly on your computer. No uploads, no apps, no monthly fee. People are moving through 1,000+ photos in under 10 minutes. Pay once, open in Chrome, and actually finish today.</p>
 
   <div class="price-badge">Everything included &nbsp;·&nbsp; <strong>$27</strong></div><br>
 
   <a href="https://buy.stripe.com/9B6eVe9WW3ak9kIfx64ow03" class="cta-btn">Get Instant Access — $27 →</a>
   <p class="cta-note">Instant access · Works on Mac &amp; PC · Open in Chrome and start sorting today</p>
 </section>
+
+<!-- STAT CALLOUT -->
+<div class="stat-callout">
+  <div class="stat-callout-inner">
+    <div class="stat-num">1,400+</div>
+    <div class="stat-detail">
+      photos sorted in under 8 minutes
+      <span>Snapchat memories export — real result, first use</span>
+    </div>
+  </div>
+</div>
 
 <div class="divider"></div>
 
@@ -488,9 +567,11 @@
   <h2>You have thousands of photos.<br>You can't find any of them.</h2>
   <p>The camera roll never stops growing. Snapchat dumps. iPhone screenshots. That one perfect shot from six months ago you'll never find again.</p>
   <ul class="pain-list">
-    <li>You've been meaning to organize them for months</li>
+    <li>You've been meaning to organize them for months — or years</li>
     <li>You scroll forever looking for one specific photo</li>
     <li>Your best content is buried under 4,000 random shots</li>
+    <li>Your Snapchat export is sitting in a zip file you've never opened</li>
+    <li>You want to save everything to a hard drive but you need to find it first</li>
     <li>You keep downloading apps that don't actually help</li>
   </ul>
 </section>
@@ -520,8 +601,8 @@
       <div class="card">
         <p class="card-num">03</p>
         <h3>The Folder System</h3>
-        <p>Four folders. Travel, Stock-Print, Best, Archive. Simple enough to actually maintain. Customize the names and keys to match your brain — it saves automatically.</p>
-        <span class="tag">Included in guide</span>
+        <p>Start with broad categories — Travel, People, Best, Funny, Archive — and blast through everything fast. Then go deeper: open any subfolder and sort it further with new keys. Or build your own system entirely. By year, by person, by project — it's your brain, your folders.</p>
+        <span class="tag">Fully customizable</span>
       </div>
 
     </div>
@@ -585,10 +666,46 @@
       <li>Your camera roll has thousands of photos you can't find</li>
       <li>You're a photographer drowning in unorganized shoots</li>
       <li>You use Snapchat and your Memories are a mess</li>
+      <li>You want to sort by year or person before saving to a hard drive</li>
       <li>You're a content creator who can never find the right shot</li>
       <li>You've tried folder systems before but they didn't stick</li>
+      <li>You have a parent or family member sitting on years of phone photos they can't share</li>
       <li>You want something that actually takes 20 minutes, not 20 hours</li>
     </ul>
+  </div>
+</section>
+
+<!-- TIPS -->
+<section class="tips">
+  <div class="tips-inner">
+    <p class="section-label">Tips &amp; tricks</p>
+    <div class="tips-grid">
+
+      <div class="tip-card">
+        <p class="tip-key">01 — Batch sorting</p>
+        <h4>Too many photos to do at once? Stop anytime.</h4>
+        <p>Already-sorted photos are in subfolders — invisible to the tool. Next time you open the same folder, only unsorted files show up. Your progress never disappears.</p>
+      </div>
+
+      <div class="tip-card">
+        <p class="tip-key">02 — Multi-pass workflow</p>
+        <h4>Broad first, specific second.</h4>
+        <p>Sort everything into 4–5 wide buckets (Travel, People, Best, Funny, Archive). Then open any subfolder, change your keys to more specific categories, and go deeper. Every folder can be its own sorting session.</p>
+      </div>
+
+      <div class="tip-card">
+        <p class="tip-key">03 — Sort by year or person</p>
+        <h4>Works for any system your brain uses.</h4>
+        <p>Customize keys to anything — 2020, 2021, 2022 — or Mom, Dad, Friends, Kids. Ideal for sorting phone photos before saving to a hard drive so you can actually find things later.</p>
+      </div>
+
+      <div class="tip-card">
+        <p class="tip-key">04 — External drives</p>
+        <h4>Sorts directly on any drive you plug in.</h4>
+        <p>SD card, external hard drive, USB stick — when you click Choose Folder it opens your full file picker. Files move on the drive itself. Nothing needs to be on your main computer first.</p>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -596,6 +713,14 @@
 <section class="faq">
   <h2>Questions people ask</h2>
   <div class="faq-list">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Can I stop in the middle and come back later?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>Yes — stop whenever you want.</strong> Files you've already sorted are in subfolders. The next time you open the same folder, the tool only shows photos that haven't been sorted yet. Your progress is always saved. You can split a big photo dump across as many sessions as you need.</p></div>
+    </div>
 
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">
