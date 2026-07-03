@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort Your Memories in One Afternoon — Photo Organization System</title>
+<meta name="description" content="Years of Snapchat memories, phone camera rolls, and photo dumps — sorted in one afternoon. One keypress per photo. Files move instantly on your computer.">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --dark: #111;
+    --card: #161616;
+    --border: #242424;
+    --text: #f0f0f0;
+    --muted: #888;
+    --gold: #c9a84c;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; overflow-x: hidden; }
+
+  header { text-align: center; padding: 20px 24px 0; font-size: 0.8rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+  /* ── HERO ── */
+  .hero { max-width: 740px; margin: 0 auto; padding: 80px 24px 60px; text-align: center; }
+  .eyebrow { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  h1 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 300; line-height: 1.15; letter-spacing: -0.5px; color: #fff; margin-bottom: 24px; }
+  h1 em { font-style: normal; color: var(--gold); }
+  .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 560px; margin: 0 auto 40px; line-height: 1.7; }
+  .price-badge { display: inline-block; background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 8px 20px; font-size: 0.85rem; color: var(--muted); margin-bottom: 40px; }
+  .price-badge strong { color: #fff; font-size: 1rem; }
+  .cta-btn { display: inline-block; background: #fff; color: #000; font-size: 1rem; font-weight: 700; letter-spacing: 0.5px; padding: 18px 44px; border-radius: 8px; text-decoration: none; transition: opacity 0.15s, transform 0.15s; }
+  .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .cta-note { font-size: 0.78rem; color: var(--muted); margin-top: 12px; }
+
+  /* ── STAT ── */
+  .stat-callout { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--dark); padding: 44px 24px; text-align: center; }
+  .stat-callout-inner { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; max-width: 560px; margin: 0 auto; }
+  .stat-num { font-size: clamp(2.8rem, 7vw, 4.5rem); font-weight: 200; color: var(--gold); letter-spacing: -2px; line-height: 1; }
+  .stat-detail { font-size: 1rem; color: var(--muted); line-height: 1.7; text-align: left; }
+  .stat-detail span { font-size: 0.78rem; color: #3a3a3a; display: block; margin-top: 2px; }
+
+  /* ── DIVIDER ── */
+  .divider { width: 1px; height: 60px; background: var(--border); margin: 0 auto; }
+
+  /* ── PAIN ── */
+  .pain { max-width: 640px; margin: 0 auto; padding: 60px 24px; text-align: center; }
+  .pain h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 300; line-height: 1.4; color: #fff; margin-bottom: 20px; }
+  .pain p { color: var(--muted); font-size: 1rem; line-height: 1.8; }
+  .pain-list { list-style: none; margin: 32px auto 0; max-width: 420px; text-align: left; display: flex; flex-direction: column; gap: 14px; }
+  .pain-list li { display: flex; gap: 12px; font-size: 0.95rem; color: #bbb; }
+  .pain-list li::before { content: '—'; color: var(--muted); flex-shrink: 0; }
+
+  /* ── SECTION SHARED ── */
+  .section-label { text-align: center; font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 48px; }
+
+  /* ── WHAT ── */
+  .what { padding: 80px 24px; background: var(--dark); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .what-inner { max-width: 860px; margin: 0 auto; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px 28px; }
+  .card-num { font-size: 0.7rem; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; }
+  .card h3 { font-size: 1.1rem; font-weight: 500; color: #fff; margin-bottom: 10px; }
+  .card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+  .tag { display: inline-block; margin-top: 16px; font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
+
+  /* ── EDITIONS ── */
+  .editions { padding: 60px 24px; background: var(--dark); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .editions-inner { max-width: 860px; margin: 0 auto; }
+
+  /* ── HOW ── */
+  .how { max-width: 640px; margin: 0 auto; padding: 80px 24px; }
+  .how h2 { text-align: center; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 300; color: #fff; margin-bottom: 48px; }
+  .steps { display: flex; flex-direction: column; gap: 32px; }
+  .step { display: grid; grid-template-columns: 36px 1fr; gap: 20px; align-items: start; }
+  .step-num { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: var(--muted); flex-shrink: 0; }
+  .step h4 { font-size: 1rem; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .step p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+  .keys-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .key { background: #1e1e1e; border: 1px solid #333; border-radius: 6px; padding: 4px 12px; font-family: monospace; font-size: 0.85rem; color: #ddd; }
+
+  /* ── FOR WHO ── */
+  .forwho { background: var(--dark); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 24px; }
+  .forwho-inner { max-width: 640px; margin: 0 auto; text-align: center; }
+  .forwho h2 { font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 300; color: #fff; margin-bottom: 32px; }
+  .who-list { list-style: none; display: flex; flex-direction: column; gap: 12px; text-align: left; max-width: 440px; margin: 0 auto; }
+  .who-list li { display: flex; gap: 12px; font-size: 0.95rem; color: #ccc; }
+  .who-list li::before { content: '✓'; color: var(--gold); flex-shrink: 0; }
+
+  /* ── TIPS ── */
+  .tips { padding: 80px 24px; }
+  .tips-inner { max-width: 860px; margin: 0 auto; }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 40px; }
+  .tip-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px; }
+  .tip-key { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+  .tip-card h4 { font-size: 0.98rem; font-weight: 500; color: #fff; margin-bottom: 8px; }
+  .tip-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.75; }
+
+  /* ── FAQ ── */
+  .faq { max-width: 680px; margin: 0 auto; padding: 80px 24px; }
+  .faq h2 { text-align: center; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 300; color: #fff; margin-bottom: 40px; }
+  .faq-list { display: flex; flex-direction: column; gap: 2px; }
+  .faq-item { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+  .faq-q { width: 100%; background: var(--card); border: none; cursor: pointer; padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; gap: 16px; text-align: left; font-size: 0.92rem; font-weight: 500; color: #fff; font-family: inherit; transition: background 0.15s; }
+  .faq-q:hover { background: #1c1c1c; }
+  .faq-icon { color: var(--muted); font-size: 1.2rem; flex-shrink: 0; transition: transform 0.2s; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.2s ease; background: var(--card); border-top: 0 solid var(--border); }
+  .faq-item.open .faq-a { max-height: 300px; border-top-width: 1px; padding: 18px 22px; }
+  .faq-a p { font-size: 0.88rem; color: var(--muted); line-height: 1.75; }
+  .faq-a strong { color: #ccc; }
+
+  /* ── BOTTOM CTA ── */
+  .bottom-cta { max-width: 640px; margin: 0 auto; padding: 100px 24px; text-align: center; }
+  .bottom-cta h2 { font-size: clamp(1.6rem, 4vw, 2.6rem); font-weight: 300; color: #fff; margin-bottom: 16px; line-height: 1.2; }
+  .bottom-cta p { color: var(--muted); margin-bottom: 40px; font-size: 1rem; }
+
+  /* ── FOOTER ── */
+  footer { border-top: 1px solid var(--border); padding: 32px 24px; text-align: center; font-size: 0.78rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>Photo Organization System</header>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="eyebrow">Snapchat Memories · Phone Camera Roll · Family Archives</p>
+  <h1>Your memories are in there.<br>Let's actually<br><em>find them.</em></h1>
+  <p class="hero-sub">One keypress per photo. Sort years of Snapchat memories, phone camera rolls, and old photo dumps in one afternoon. Files move instantly on your computer — no uploads, no cloud, nothing leaves your hands.</p>
+
+  <div class="price-badge">Everything included &nbsp;·&nbsp; <strong>$27</strong></div><br>
+
+  <a href="https://buy.stripe.com/9B6eVe9WW3ak9kIfx64ow03" class="cta-btn">Get Instant Access — $27 →</a>
+  <p class="cta-note">Instant access · Works on Mac &amp; PC · Open in Chrome and start sorting today</p>
+</section>
+
+<!-- STAT -->
+<div class="stat-callout">
+  <div class="stat-callout-inner">
+    <div class="stat-num">1,400+</div>
+    <div class="stat-detail">
+      Snapchat memories sorted in under 8 minutes
+      <span>Real result, first use — and that was just the first batch</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PAIN -->
+<section class="pain">
+  <h2>You have years of memories.<br>You just can't get to them.</h2>
+  <p>The photos exist. Somewhere in a zip file, a camera roll, a folder you opened once and closed. You know there are good ones in there — you just can't see them.</p>
+  <ul class="pain-list">
+    <li>Your Snapchat export has 20+ zip files you've never opened</li>
+    <li>You scroll forever trying to find that one photo from that trip</li>
+    <li>Your phone camera roll has thousands of shots you've been meaning to sort</li>
+    <li>You want to share memories with people but can't find them fast enough</li>
+    <li>You've been putting this off for months and every month it gets bigger</li>
+    <li>You keep downloading apps that make it feel even more overwhelming</li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHAT YOU GET -->
+<section class="what">
+  <div class="what-inner">
+    <p class="section-label">What's included</p>
+    <div class="cards">
+
+      <div class="card">
+        <p class="card-num">01</p>
+        <h3>The Photo Sorter Tool</h3>
+        <p>A browser-based tool that shows your photos one at a time. One keypress moves each file into the right folder — instantly, on your own computer. No upload. No cloud. No waiting.</p>
+        <span class="tag">Mac &amp; PC · Chrome/Edge</span>
+      </div>
+
+      <div class="card">
+        <p class="card-num">02</p>
+        <h3>The Snapchat 5-Minute Guide</h3>
+        <p>Exactly how to get your memories off Snapchat and onto your computer. How to extract the zip files, where to find your photos inside them, and how to set up your folders. Step by step, nothing assumed.</p>
+        <span class="tag">PDF · Print or follow on screen</span>
+      </div>
+
+      <div class="card">
+        <p class="card-num">03</p>
+        <h3>The Folder System</h3>
+        <p>Travel, People, Best, Share, Archive — a default system that works for memories. Or set any key and any folder name to match how your brain works. Customize once, saves forever.</p>
+        <span class="tag">Fully customizable</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EDITIONS -->
+<section class="editions">
+  <div class="editions-inner">
+    <p class="section-label">Works for every kind of photo dump</p>
+    <div class="cards">
+
+      <div class="card" style="border-color:#c9a84c33;">
+        <p class="card-num" style="color:#c9a84c;">Memories Edition</p>
+        <h3>Finally clear your Snapchat dump</h3>
+        <p>Extract your memories, open the sorter, and go. Travel, People, Best, Share, Archive. Stop anytime and come back — already-sorted photos never show up again.</p>
+        <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:6px;">
+          <span class="tag">T Travel</span>
+          <span class="tag">P People</span>
+          <span class="tag">B Best</span>
+          <span class="tag">S Share</span>
+          <span class="tag">A Archive</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="card-num">Family Edition</p>
+        <h3>Sort by year, person, or event</h3>
+        <p>Set your own keys — 2022, 2023, 2024, or Mom, Dad, Kids, Friends. Perfect for anyone saving years of phone photos to a hard drive who actually wants to find things later.</p>
+        <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:6px;">
+          <span class="tag">any key</span>
+          <span class="tag">any folder name</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="card-num">Photographer Edition</p>
+        <h3>Sort a shoot without opening Lightroom</h3>
+        <p>One keypress sends each shot to Keepers, Rejects, Stock, or Client. Sort a 500-shot session before you would have even opened your editing software.</p>
+        <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:6px;">
+          <span class="tag">K Keepers</span>
+          <span class="tag">R Rejects</span>
+          <span class="tag">S Stock</span>
+          <span class="tag">C Client</span>
+        </div>
+      </div>
+
+    </div>
+    <p style="text-align:center; margin-top:28px; font-size:0.8rem; color:#444;">All three workflows. One tool. Customize your keys on the start screen — saves automatically.</p>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <h2>How it works</h2>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>Get your photos onto your computer</h4>
+        <p>For Snapchat: request your data at accounts.snapchat.com, download the zip files, extract them. The included guide walks you through exactly where to find your photos inside the export.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>Open the sorter in Chrome</h4>
+        <p>Open the tool, click Choose Folder, pick the folder with your photos. Your first photo appears immediately. No install, no account, no setup beyond that.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>One keypress per photo</h4>
+        <p>Look at the photo. Press a key. It moves. That's the whole thing. Customize the keys and folder names before you start — or use the defaults and change them later.</p>
+        <div class="keys-row">
+          <span class="key">T Travel</span>
+          <span class="key">P People</span>
+          <span class="key">B Best</span>
+          <span class="key">S Share</span>
+          <span class="key">A Archive</span>
+          <span class="key">→ skip</span>
+          <span class="key">U undo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>Stop anytime. Come back. Keep going.</h4>
+        <p>Too many to do at once? Sort for an hour, close the tab, come back tomorrow. Already-sorted photos are in subfolders — invisible to the tool. Only unsorted files show up next time. Your progress is always saved.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOR WHO -->
+<section class="forwho">
+  <div class="forwho-inner">
+    <h2>This is for you if —</h2>
+    <ul class="who-list">
+      <li>You downloaded your Snapchat data but it's sitting zipped and untouched</li>
+      <li>You have years of phone photos you've been meaning to organize</li>
+      <li>You want to sort by year or person before saving to a hard drive</li>
+      <li>You're a parent or you're helping a parent sort through their camera roll</li>
+      <li>You're a creator who wants to find throwback content but can't locate anything</li>
+      <li>You want to share old memories with people but can never find the right photo</li>
+      <li>You've tried folder systems before but they didn't stick</li>
+      <li>You want something that actually takes one afternoon, not one year</li>
+    </ul>
+  </div>
+</section>
+
+<!-- TIPS -->
+<section class="tips">
+  <div class="tips-inner">
+    <p class="section-label">Tips &amp; tricks</p>
+    <div class="tips-grid">
+
+      <div class="tip-card">
+        <p class="tip-key">01 — Batch it</p>
+        <h4>Too many to do at once? Sort in batches.</h4>
+        <p>Already-sorted photos are in subfolders and invisible to the tool. Next time you open the same folder, only unsorted files show up. Stop, extract more, come back — your progress never disappears.</p>
+      </div>
+
+      <div class="tip-card">
+        <p class="tip-key">02 — Go deeper</p>
+        <h4>Broad first, specific second.</h4>
+        <p>Sort everything into wide buckets fast. Then open any sub-folder and sort it further with new keys. Travel becomes: Destinations, Landscapes, People. Every folder can be its own session.</p>
+      </div>
+
+      <div class="tip-card">
+        <p class="tip-key">03 — Sort for someone else</p>
+        <h4>Works on any Mac or PC in Chrome.</h4>
+        <p>Download the links from your purchase email and open the tool on anyone's computer. Great for helping a parent or family member sort their camera roll before saving to a hard drive.</p>
+      </div>
+
+      <div class="tip-card">
+        <p class="tip-key">04 — External drives</p>
+        <h4>Sorts directly on any drive you plug in.</h4>
+        <p>SD card, external hard drive, USB stick — files move on the drive itself. Sort straight onto a hard drive without copying anything to your main computer first.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <h2>Questions people ask</h2>
+  <div class="faq-list">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Can I stop in the middle and come back later?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>Yes — stop whenever you want.</strong> Already-sorted files are in subfolders and invisible to the tool. The next time you open the same folder, only unsorted photos show up. Your progress is always saved. Split a giant photo dump across as many sessions as you need.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How do I get my Snapchat memories onto my computer?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p>Go to <strong>accounts.snapchat.com</strong>, click My Data, scroll to Memories, and submit a request. Snapchat emails you a download link within a few hours. Download the zip files, extract them (double-click on Mac), and move your .jpg and .mp4 files into one folder. The included guide walks you through every step.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Snapchat gave me like 20 zip files. Do I have to do them all at once?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>No — do them in batches.</strong> Extract a few zips at a time, dump the photos into your sorting folder, and sort. Then extract more, add them to the same folder, and sort again. Already-sorted files are in subfolders so they never show up twice. Same folder every time and everything accumulates cleanly.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Do my photos get uploaded anywhere?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>Never.</strong> Everything happens entirely on your own computer. The tool runs in your browser but only talks to your local files — nothing is sent to a server, stored in a cloud, or seen by anyone else. 100% private.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Does it work with videos too?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>Yes.</strong> MP4, MOV, and all the standard video formats Snapchat and iPhones produce. Videos auto-play muted so you can preview them while you sort. Same keyboard shortcuts, same workflow.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        I'm on my phone — does it work?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p>The sorter requires Chrome or Edge on a Mac or PC — that's what gives it direct access to your files. The fastest path: export your photos to your computer first (the guide walks you through exactly how for Snapchat), then sort in one session.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Does it work on Windows?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>Yes.</strong> Open the tool in Chrome or Edge on any Windows PC and it works exactly the same way. Great for helping a family member on a different computer — the purchase links never expire.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Is this a subscription?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p><strong>One-time purchase, yours forever.</strong> No monthly fees. No account to create. You get the tool, the Snapchat guide, and the folder system — all in one payment. The links never expire.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What if I lose the page?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><p>Stripe sends you a receipt email with your order details. On the download page there's an option to email yourself all the links so you always have them. And you can always reach out at maddie@elevatealign.com — I'll resend everything.</p></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta" id="buy">
+  <h2>Your memories deserve<br>to be found.</h2>
+  <p>$27 · One-time · Instant access · Works on Mac &amp; PC</p>
+  <a href="https://buy.stripe.com/9B6eVe9WW3ak9kIfx64ow03" class="cta-btn">Get the Photo Organization System →</a>
+  <p class="cta-note" style="margin-top:14px;">Photo Sorter Tool · Snapchat Guide · Folder System · Customize any key</p>
+</section>
+
+<footer>
+  © 2026 · Photo Organization System · Questions? <a href="mailto:maddie@elevatealign.com" style="color:inherit">maddie@elevatealign.com</a>
+  &nbsp;·&nbsp; <a href="privacy-policy.html" style="color:inherit">Privacy Policy</a>
+</footer>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+
+</body>
+</html>
