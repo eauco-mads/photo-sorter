@@ -218,6 +218,14 @@
   #progress-text { font-size: 0.85rem; color: #888; }
   #filename { font-size: 0.85rem; color: #ccc; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+  #sort-timer {
+    font-size: 1.1rem;
+    font-weight: 200;
+    color: #c9a84c;
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+  }
+
   #key-hints {
     display: flex;
     gap: 16px;
@@ -388,6 +396,7 @@
       <div id="progress-text">—</div>
       <div id="folder-label"></div>
     </div>
+    <div id="sort-timer">0:00</div>
     <div id="filename">—</div>
     <div id="key-hints">
       <!-- populated by renderKeyHints() -->
@@ -399,6 +408,10 @@
 <div id="done-screen">
   <h2>All done!</h2>
   <p id="done-folder-msg"></p>
+  <div id="done-timer-display" style="display:none; text-align:center; margin: 4px 0;">
+    <span id="done-timer-num" style="font-size:2.8rem; font-weight:200; color:#c9a84c; letter-spacing:-1px; font-variant-numeric:tabular-nums;"></span>
+    <div style="font-size:0.78rem; color:#555; margin-top:4px; letter-spacing:1px; text-transform:uppercase;">total sorting time</div>
+  </div>
   <div id="stats"></div>
   <button id="restart-btn">Sort Another Folder</button>
 </div>
@@ -531,6 +544,36 @@ document.addEventListener('input', function(e) {
   }
 });
 
+// ── TIMER ────────────────────────────────────────────────────────
+let sortStartTime = null;
+let timerInterval = null;
+
+function startTimer() {
+  sortStartTime = Date.now();
+  timerInterval = setInterval(() => {
+    const el = document.getElementById('sort-timer');
+    if (!el) return;
+    const elapsed = Date.now() - sortStartTime;
+    const mins = Math.floor(elapsed / 60000);
+    const secs = Math.floor((elapsed % 60000) / 1000);
+    el.textContent = `${mins}:${String(secs).padStart(2, '0')}`;
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function getElapsedString() {
+  if (!sortStartTime) return null;
+  const elapsed = Date.now() - sortStartTime;
+  const mins = Math.floor(elapsed / 60000);
+  const secs = Math.floor((elapsed % 60000) / 1000);
+  if (mins === 0) return `0:${String(secs).padStart(2, '0')}`;
+  return `${mins}:${String(secs).padStart(2, '0')}`;
+}
+
 // ── SORTING STATE ────────────────────────────────────────────────
 let rootHandle = null;
 let files = [];
@@ -593,6 +636,8 @@ async function loadFiles() {
   }
 
   document.getElementById('folder-label').textContent = rootHandle.name;
+  document.getElementById('sort-timer').textContent = '0:00';
+  startTimer();
   startScreen.style.display = 'none';
   app.style.display = 'flex';
   await showCurrent();
@@ -761,9 +806,16 @@ async function deleteFile() {
 }
 
 function finish() {
+  stopTimer();
   if (currentObjectURL) { URL.revokeObjectURL(currentObjectURL); currentObjectURL = null; }
   app.style.display = 'none';
   doneScreen.style.display = 'flex';
+
+  const elapsed = getElapsedString();
+  if (elapsed) {
+    document.getElementById('done-timer-num').textContent = elapsed;
+    document.getElementById('done-timer-display').style.display = 'block';
+  }
 
   if (rootHandle) {
     const fname = rootHandle.name;
@@ -786,9 +838,11 @@ function finish() {
 
 document.getElementById('restart-btn').addEventListener('click', () => {
   doneScreen.style.display = 'none';
+  document.getElementById('done-timer-display').style.display = 'none';
   startScreen.style.display = 'flex';
   rootHandle = null;
   files = [];
+  sortStartTime = null;
 });
 
 // ── KEYBOARD ─────────────────────────────────────────────────────
