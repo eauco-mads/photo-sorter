@@ -71,6 +71,42 @@
 
   .start-actions { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
+  /* ── MOBILE FALLBACK (no File System Access API) ── */
+  .mobile-box {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 24px 26px;
+    max-width: 380px;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .mobile-box-title { color: #fff; font-weight: 600; font-size: 1rem; }
+  .mobile-box-copy { color: #999; font-size: 0.88rem; line-height: 1.55; }
+  .mobile-link-row { display: flex; gap: 8px; }
+  #mobile-link-input {
+    flex: 1;
+    min-width: 0;
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: #ccc;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    font-family: monospace;
+  }
+  #copy-link-btn { padding: 10px 16px; font-size: 0.85rem; white-space: nowrap; }
+  #email-link-btn {
+    color: #888;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    text-align: center;
+  }
+  #email-link-btn:hover { color: #ccc; }
+
   button {
     background: #fff;
     color: #000;
@@ -359,16 +395,26 @@
 
 <div id="start-screen">
   <h1>Photo Sorter</h1>
-  <p>Pick your photos folder. Sort one by one with keyboard shortcuts. Files move instantly — no extra steps.</p>
+  <p id="intro-text">Pick your photos folder. Sort one by one with keyboard shortcuts. Files move instantly — no extra steps.</p>
 
   <div class="kbd-grid" id="kbd-grid">
     <!-- populated by renderStartScreen() -->
   </div>
 
-  <div class="start-actions">
+  <div class="start-actions" id="desktop-actions">
     <button id="pick-btn">Choose Folder</button>
     <button id="customize-btn">customize folder names &amp; keys</button>
     <p style="font-size:0.8rem; color:#444;">Desktop or laptop only · Requires Chrome or Edge · Files move directly on your computer</p>
+  </div>
+
+  <div class="mobile-box" id="mobile-actions" style="display:none;">
+    <p class="mobile-box-title">This one's a computer thing</p>
+    <p class="mobile-box-copy">Photo Sorter sorts files right on your hard drive, so it needs a Mac or PC. Send yourself this link and open it there:</p>
+    <div class="mobile-link-row">
+      <input id="mobile-link-input" readonly value="https://eauco-mads.github.io/photo-sorter/">
+      <button id="copy-link-btn">Copy Link</button>
+    </div>
+    <a id="email-link-btn" href="#">Email it to myself instead</a>
   </div>
 </div>
 
@@ -892,8 +938,48 @@ function showError(msg) {
   errorBanner.style.display = 'block';
 }
 
+// ── DEVICE SUPPORT CHECK ─────────────────────────────────────────
+function checkDeviceSupport() {
+  if (window.showDirectoryPicker) return;
+
+  document.getElementById('intro-text').textContent =
+    'This tool sorts photos right on your computer — it needs a Mac or PC to work.';
+  document.getElementById('kbd-grid').style.display = 'none';
+  document.getElementById('desktop-actions').style.display = 'none';
+  document.getElementById('mobile-actions').style.display = 'flex';
+
+  // Small phone screens can be shorter than the box needs — allow scrolling instead of clipping
+  document.body.style.overflow = 'auto';
+  document.getElementById('start-screen').style.height = 'auto';
+  document.getElementById('start-screen').style.minHeight = '100vh';
+
+  const link = 'https://eauco-mads.github.io/photo-sorter/';
+
+  document.getElementById('copy-link-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('copy-link-btn');
+    try {
+      await navigator.clipboard.writeText(link);
+    } catch (e) {
+      const input = document.getElementById('mobile-link-input');
+      input.select();
+      document.execCommand('copy');
+    }
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = original; }, 1800);
+  });
+
+  document.getElementById('email-link-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    const subject = encodeURIComponent('Photo Sorter — open this on your computer');
+    const body = encodeURIComponent(`Sending this to myself so I can open it on my Mac or PC:\n\n${link}`);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  });
+}
+
 // ── INIT ─────────────────────────────────────────────────────────
 renderStartScreen();
+checkDeviceSupport();
 </script>
 </body>
 </html>
