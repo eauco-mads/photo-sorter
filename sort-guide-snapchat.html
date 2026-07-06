@@ -97,8 +97,11 @@
     /* Page 2 starts here — this is a block child of a block parent, Safari respects it */
     .body-p2 { page-break-before: always !important; break-before: page !important; }
 
-    /* Keep each card/block intact instead of splitting across the page break */
-    .step-block, .export-card, .system-card, .key-grid, .tip, .customize-box, .footer {
+    /* Keep each card/block intact instead of splitting across the page break.
+       Grid/flex containers (.step-block, .key-grid, .footer) are deliberately left out —
+       Safari has a long-standing bug where break-inside:avoid on a grid or flex
+       container duplicates its content when printing. */
+    .export-card, .system-card, .tip, .customize-box {
       page-break-inside: avoid !important;
       break-inside: avoid !important;
     }
