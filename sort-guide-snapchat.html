@@ -81,12 +81,27 @@
 
   /* PRINT — Safari fix: page must be display:block for page-break-before to work on children */
   @media print {
+    /* Force background colors/gradients to print — Chrome strips them by default
+       unless "Background graphics" is checked in the print dialog, which most
+       people never see. This overrides that regardless of the checkbox. */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+
     body { background: #fff; }
     @page { size: letter; margin: 0; }
     .page { display: block; width: 100%; box-shadow: none; }
 
     /* Page 2 starts here — this is a block child of a block parent, Safari respects it */
     .body-p2 { page-break-before: always !important; break-before: page !important; }
+
+    /* Keep each card/block intact instead of splitting across the page break */
+    .step-block, .export-card, .system-card, .key-grid, .tip, .customize-box, .footer {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
 
     .no-print { display: none !important; }
   }
