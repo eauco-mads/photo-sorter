@@ -18,6 +18,8 @@ function doPost(e) {
 
     if (action === 'waitlist') {
       notifyWaitlist(email);
+    } else if (action === 'photoCount') {
+      notifyPhotoCount(email, data.photoCount);
     } else {
       sendDeliveryEmail(email);
     }
@@ -47,6 +49,12 @@ function sendDeliveryEmail(toEmail) {
 function notifyWaitlist(email) {
   const subject = `New waitlist signup: ${email}`;
   const body    = `Someone joined the Google Photos Sorter waitlist!\n\nEmail: ${email}\n\nAdd them to your list for when it launches.`;
+  GmailApp.sendEmail(Session.getActiveUser().getEmail(), subject, body);
+}
+
+function notifyPhotoCount(email, photoCount) {
+  const subject = `Photo count: ${photoCount}${email ? ' — ' + email : ''}`;
+  const body    = `A customer said how many photos they're about to sort.\n\nRange: ${photoCount}\nEmail: ${email || '(not provided)'}\n\nThis is just for your own stats — no reply needed.`;
   GmailApp.sendEmail(Session.getActiveUser().getEmail(), subject, body);
 }
 

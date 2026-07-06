@@ -72,6 +72,39 @@
   .nudge-box strong { color: #f0c000; }
   .nudge-box em { font-style: normal; text-decoration: underline; }
 
+  .mobile-box {
+    background: #14202c; border: 1px solid #24405a;
+    border-radius: 12px; padding: 20px 24px;
+    margin-bottom: 20px; text-align: left;
+  }
+  .mobile-box p { font-size: 0.88rem; color: #bcdcf5; line-height: 1.7; }
+  .mobile-box strong { color: #fff; }
+
+  /* ── PHOTO COUNT ── */
+  .count-box {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px; margin-bottom: 32px; text-align: left;
+  }
+  .count-box h2 { font-size: 0.95rem; font-weight: 500; color: #fff; margin-bottom: 14px; }
+  .count-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .count-btn {
+    background: #0f0f0f; border: 1px solid var(--border); color: #ddd;
+    border-radius: 8px; padding: 12px 14px; font-size: 0.85rem; cursor: pointer;
+    font-family: inherit; transition: border-color 0.15s, background 0.15s;
+  }
+  .count-btn:hover { border-color: var(--gold); background: #161616; }
+  .count-btn.picked { border-color: var(--gold); background: #1e1a0d; color: var(--gold); }
+  @media (max-width: 480px) { .count-grid { grid-template-columns: 1fr; } }
+
+  /* ── CHALLENGE ── */
+  .challenge-box {
+    background: linear-gradient(135deg, #1a1500, #0f0f0f);
+    border: 1px solid #3a2e00; border-radius: 12px;
+    padding: 22px 24px; margin-bottom: 32px; text-align: left;
+  }
+  .challenge-box p { font-size: 0.88rem; color: #d4a800; line-height: 1.7; }
+  .challenge-box strong { color: #f0c000; }
+
   .or-divider {
     display: flex; align-items: center; gap: 16px;
     margin: 32px 0; color: var(--muted); font-size: 0.8rem;
@@ -203,18 +236,23 @@
 
   </div>
 
+  <!-- MOBILE NOTICE (shown via JS if on phone) -->
+  <div class="mobile-box" id="mobile-notice" style="display:none;">
+    <p>📱 <strong>You're on your phone.</strong> The sorter tool needs a Mac or PC (Chrome or Edge) — it won't work here. Enter your email below right now so everything is waiting in your inbox when you're back at your computer. Don't skip this part or you'll lose it.</p>
+  </div>
+
   <!-- NUDGE -->
-  <div class="nudge-box">
+  <div class="nudge-box" id="desktop-notice">
     <p>⚠️ <strong>THIS WILL NOT SEND TO YOUR EMAIL AUTOMATICALLY</strong> — if you're anything like me it will just get lost in there anyway, so download and bookmark them <em>right now</em> so they're always there. You'll see in 30 seconds how easy this is!!</p>
   </div>
 
   <!-- OR DIVIDER -->
-  <div class="or-divider">but if you must...</div>
+  <div class="or-divider" id="or-divider">but if you must...</div>
 
   <!-- EMAIL FORM -->
   <div class="email-box">
-    <h2>...or if you just want a copy in your inbox</h2>
-    <p>Enter your email below and we'll send everything right to you — no judgment, we get it!</p>
+    <h2 id="email-box-heading">...or if you just want a copy in your inbox</h2>
+    <p id="email-box-sub">Enter your email below and we'll send everything right to you — no judgment, we get it!</p>
     <div id="email-form">
       <div class="form-row">
         <input class="email-input" type="email" id="email-field" placeholder="your@email.com" />
@@ -272,11 +310,27 @@
 
   </div>
 
+  <!-- CHALLENGE -->
+  <div class="challenge-box">
+    <p>🎉 <strong>Challenge:</strong> See how many photos you can sort in 10 minutes. Then tell me on Instagram.</p>
+  </div>
+
+  <!-- PHOTO COUNT -->
+  <div class="count-box" id="count-box">
+    <h2>How many photos are you about to sort?</h2>
+    <div class="count-grid" id="count-grid">
+      <button class="count-btn" onclick="pickCount('Under 5,000', this)">Under 5,000</button>
+      <button class="count-btn" onclick="pickCount('5,000–15,000', this)">5,000–15,000</button>
+      <button class="count-btn" onclick="pickCount('15,000–30,000', this)">15,000–30,000</button>
+      <button class="count-btn" onclick="pickCount('30,000+', this)">30,000+</button>
+    </div>
+  </div>
+
   <!-- WAITLIST -->
   <div class="ty-waitlist">
     <div class="ty-waitlist-tag">Coming soon</div>
-    <h2>📱 Google Photos Sorter — Mobile Version</h2>
-    <p>Sort straight from your phone — no computer needed. As an existing customer you'll get it free when it launches. Drop your email and you'll be first to know.</p>
+    <h2>📱 Mobile Version</h2>
+    <p>Works with: Google Photos, iPhone Photos, Android. Sort straight from your phone — no computer needed. As an existing customer you'll get it free when it launches. Drop your email and you'll be first to know.</p>
     <div id="ty-wl-form">
       <div class="wl-row">
         <input type="email" id="ty-wl-email" class="wl-input" placeholder="your@email.com" />
@@ -322,6 +376,24 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('ty-wl-success').style.display = 'block';
   }
 
+  // Mobile: the tool needs desktop Chrome/Edge, so push email delivery instead of bookmarking
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    document.getElementById('mobile-notice').style.display = 'block';
+    document.getElementById('desktop-notice').style.display = 'none';
+    document.getElementById('or-divider').style.display = 'none';
+    document.getElementById('email-box-heading').textContent = 'Send it to your inbox';
+    document.getElementById('email-box-sub').textContent = "Enter your email and we'll send everything so it's there when you're at your computer.";
+  }
+
+  // Photo-count: if already answered, show it as picked
+  const savedCount = localStorage.getItem('ps_photo_count');
+  if (savedCount) {
+    document.querySelectorAll('#count-grid .count-btn').forEach(btn => {
+      if (btn.textContent.trim() === savedCount) btn.classList.add('picked');
+    });
+  }
+
   // Sync email between both forms as user types
   ['email-field', 'ty-wl-email'].forEach(id => {
     const el = document.getElementById(id);
@@ -361,6 +433,16 @@ async function joinWaitlist() {
   } catch(e) {}
   document.getElementById('ty-wl-form').style.display = 'none';
   document.getElementById('ty-wl-success').style.display = 'block';
+}
+
+async function pickCount(range, btn) {
+  document.querySelectorAll('#count-grid .count-btn').forEach(b => b.classList.remove('picked'));
+  btn.classList.add('picked');
+  localStorage.setItem('ps_photo_count', range);
+  const email = localStorage.getItem('ps_email') || '';
+  try {
+    await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ email, action: 'photoCount', photoCount: range }) });
+  } catch(e) {}
 }
 </script>
 </body>
