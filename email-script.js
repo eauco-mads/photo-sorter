@@ -133,19 +133,23 @@ function buildEmail() {
               <table cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="padding:3px 10px 3px 0;">
-                    <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">T</span>
-                    <span style="font-size:12px;color:#888;margin-left:6px;">Travel</span>
+                    <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">P</span>
+                    <span style="font-size:12px;color:#888;margin-left:6px;">Print</span>
                   </td>
                   <td style="padding:3px 10px 3px 0;">
                     <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">S</span>
-                    <span style="font-size:12px;color:#888;margin-left:6px;">Stock-Print</span>
+                    <span style="font-size:12px;color:#888;margin-left:6px;">Stock</span>
                   </td>
                   <td style="padding:3px 10px 3px 0;">
-                    <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">B</span>
-                    <span style="font-size:12px;color:#888;margin-left:6px;">Best</span>
+                    <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">V</span>
+                    <span style="font-size:12px;color:#888;margin-left:6px;">Videography</span>
                   </td>
                 </tr>
                 <tr>
+                  <td style="padding:3px 10px 3px 0;">
+                    <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">M</span>
+                    <span style="font-size:12px;color:#888;margin-left:6px;">Me</span>
+                  </td>
                   <td style="padding:3px 10px 3px 0;">
                     <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">A</span>
                     <span style="font-size:12px;color:#888;margin-left:6px;">Archive</span>
@@ -154,6 +158,8 @@ function buildEmail() {
                     <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">→</span>
                     <span style="font-size:12px;color:#888;margin-left:6px;">Skip</span>
                   </td>
+                </tr>
+                <tr>
                   <td style="padding:3px 10px 3px 0;">
                     <span style="background:#1e1e1e;border:1px solid #333;border-radius:5px;padding:3px 10px;font-family:monospace;font-size:12px;color:#fff;display:inline-block;">U</span>
                     <span style="font-size:12px;color:#888;margin-left:6px;">Undo</span>
