@@ -303,6 +303,30 @@
   #done-screen h2 { font-size: 1.6rem; font-weight: 300; }
   #done-screen p { color: #888; }
 
+  #done-hero {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .hero-stat { text-align: center; }
+  .hero-stat .hero-num {
+    font-size: 2.8rem;
+    font-weight: 200;
+    color: #c9a84c;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+  .hero-stat .hero-label {
+    font-size: 0.78rem;
+    color: #555;
+    margin-top: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
   #stats {
     background: #1a1a1a;
     border-radius: 12px;
@@ -454,9 +478,15 @@
 <div id="done-screen">
   <h2>All done!</h2>
   <p id="done-folder-msg"></p>
-  <div id="done-timer-display" style="display:none; text-align:center; margin: 4px 0;">
-    <span id="done-timer-num" style="font-size:2.8rem; font-weight:200; color:#c9a84c; letter-spacing:-1px; font-variant-numeric:tabular-nums;"></span>
-    <div style="font-size:0.78rem; color:#555; margin-top:4px; letter-spacing:1px; text-transform:uppercase;">total sorting time</div>
+  <div id="done-hero" style="display:none;">
+    <div class="hero-stat">
+      <span class="hero-num" id="done-total-num"></span>
+      <div class="hero-label">photos sorted</div>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-num" id="done-timer-num"></span>
+      <div class="hero-label">total sorting time</div>
+    </div>
   </div>
   <div id="stats"></div>
   <button id="restart-btn">Sort Another Folder</button>
@@ -514,7 +544,7 @@ function renderStartScreen() {
     `<div class="key">${f.key.toUpperCase()}</div><div class="label">Move to ${f.name}</div>`
   ).join('');
   const fixedRows = `
-    <div class="key">D</div><div class="label">Duplicate — copy added to end of queue</div>
+    <div class="key">D</div><div class="label">Duplicate — copy shown right after this one</div>
     <div class="key">→</div><div class="label">Skip (leave in place)</div>
     <div class="key">U</div><div class="label">Undo last move</div>
     <div class="key">Del</div><div class="label">Delete file (asks to confirm)</div>
@@ -627,6 +657,7 @@ let files = [];
 let index = 0;
 let undoStack = [];
 let moved = {};
+let totalSorted = 0;
 let toastTimer = null;
 let undoBarTimer = null;
 let currentObjectURL = null;
@@ -664,6 +695,7 @@ async function loadFiles() {
   files = [];
   index = 0;
   undoStack = [];
+  totalSorted = 0;
   moved = { Deleted: 0, Skipped: 0 };
   folderConfig.forEach(f => { moved[f.name] = 0; });
 
@@ -766,6 +798,7 @@ async function moveFile(key) {
     undoStack.push({ name: file.name, originalIndex, fromDir: rootHandle, toDir: destDir, toHandle: newHandle, folderName });
     files.splice(originalIndex, 1); // remove — no stale handle left behind
     moved[folderName] = (moved[folderName] || 0) + 1;
+    totalSorted++;
     // index stays put — now points to next file automatically
 
     showToast(`→ ${folderName}`);
@@ -778,6 +811,7 @@ async function moveFile(key) {
 
 async function skip() {
   moved.Skipped++;
+  totalSorted++;
   index++;
   showToast('Skipped');
   await showCurrent();
@@ -803,6 +837,7 @@ async function undoLast() {
     await toDir.removeEntry(name);
 
     if (moved[folderName] > 0) moved[folderName]--;
+    if (totalSorted > 0) totalSorted--;
     files.splice(originalIndex, 0, restored); // re-insert at exact original position
     index = originalIndex; // jump back to that photo
 
@@ -829,8 +864,8 @@ async function duplicateFile() {
     await writable.write(ab);
     await writable.close();
 
-    files.push(copyHandle);
-    showToast(`Copy added to end of queue`);
+    files.splice(index + 1, 0, copyHandle);
+    showToast(`Copy added — up next`);
   } catch(e) {
     showToast('Duplicate failed: ' + e.message, true);
   }
@@ -844,6 +879,7 @@ async function deleteFile() {
   try {
     await rootHandle.removeEntry(file.name);
     moved.Deleted++;
+    totalSorted++;
     files.splice(index, 1);
     showToast('Deleted');
     await showCurrent();
@@ -861,7 +897,8 @@ function finish() {
   const elapsed = getElapsedString();
   if (elapsed) {
     document.getElementById('done-timer-num').textContent = elapsed;
-    document.getElementById('done-timer-display').style.display = 'block';
+    document.getElementById('done-total-num').textContent = totalSorted.toLocaleString();
+    document.getElementById('done-hero').style.display = 'flex';
   }
 
   if (rootHandle) {
@@ -885,7 +922,7 @@ function finish() {
 
 document.getElementById('restart-btn').addEventListener('click', () => {
   doneScreen.style.display = 'none';
-  document.getElementById('done-timer-display').style.display = 'none';
+  document.getElementById('done-hero').style.display = 'none';
   startScreen.style.display = 'flex';
   rootHandle = null;
   files = [];
